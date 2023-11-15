@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "username": "user1",
+    "role": "admin",
+    "fullName": "John Doe",
+    "imageUrl": "/assets/avatar1.jpg",
+    "address": "123 Main St",
+    "email": "user1@example.com",
+    "password": "password1",
+    "token": "token1",
+    "visible": false,
+    "uid": "uid1",
+    "createdAt": "2021-01-01",
+    "updatedAt": "2021-01-02"
+  },
+  {
+    "id": 2,
+    "username": "user2",
+    "role": "member",
+    "fullName": "Jane Smith",
+    "imageUrl": "/assets/avatar2.jpg",
+    "address": "456 Elm St",
+    "email": "user2@example.com",
+    "password": "password2",
+    "token": "token2",
+    "visible": false,
+    "uid": "uid2",
+    "createdAt": "2021-01-03",
+    "updatedAt": "2021-01-04"
+  },
+  {
+    "id": 3,
+    "username": "user3",
+    "role": "manager",
+    "fullName": "Bob Johnson",
+    "imageUrl": "/assets/avatar3.jpg",
+    "address": "789 Oak St",
+    "email": "user3@example.com",
+    "password": "password3",
+    "token": "token3",
+    "visible": false,
+    "uid": "uid3",
+    "createdAt": "2021-01-05",
+    "updatedAt": "2021-01-06"
+  }
+]

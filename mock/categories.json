@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "name": "Cần câu",
+    "description": "Fishing rod, can be used in conjunction with other materials like paper paper paper",
+    "imageUrl": "/assets/can-cau.jpg",
+    "filter": "knox",
+    "slug": "fishing-rod",
+    "visible": false,
+    "createdAt": "2022-01-01T12:00:00Z",
+    "updatedAt": "2022-01-01T12:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Mồi câu",
+    "description": "bait, can be used in conjunction with other materials like paper paper paper",
+    "imageUrl": "/assets/moi-cau.jpg",
+    "filter": "knox",
+    "slug": "bait",
+    "visible": false,
+    "createdAt": "2022-01-01T12:00:00Z",
+    "updatedAt": "2022-01-01T12:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Món nhậu",
+    "description": "Fishing rod, can be used in conjunction with other materials like paper paper paper",
+    "imageUrl": "/assets/mon-nhau-img-1.png",
+    "filter": "knox",
+    "slug": "food",
+    "visible": false,
+    "createdAt": "2022-01-01T12:00:00Z",
+    "updatedAt": "2022-01-01T12:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Đồ uống",
+    "description": "drink can be used in conjunction with other materials like paper paper paper",
+    "imageUrl": "/assets/bia-1.jpg",
+    "filter": "knox",
+    "slug": "drink",
+    "visible": false,
+    "createdAt": "2022-01-01T12:00:00Z",
+    "updatedAt": "2022-01-01T12:00:00Z"
+  }
+]

@@ -21,7 +21,9 @@ const TableTwo = ({
           <h4 className="text-xl font-semibold text-black dark:text-white">
             {title || "Top Products"}
           </h4>
-          <Link href={`${link}`}>Xem tất cả</Link>
+          <Link href={`${link}`} className="hover:text-primary">
+            Xem tất cả
+          </Link>
         </div>
       )}
 

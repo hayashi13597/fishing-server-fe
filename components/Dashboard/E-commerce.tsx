@@ -5,6 +5,7 @@ import TableTwo from "../Tables/TableTwo";
 
 import products from "@/mock/products.json";
 import users from "@/mock/users.json";
+import Table from "../Users/Table";
 
 const ECommerce: React.FC = () => {
   return (
@@ -119,11 +120,16 @@ const ECommerce: React.FC = () => {
           sortType="dateTime"
           link="/san-pham"
         />
-        <TableTwo
-          title="Người dùng mới nhất"
-          data={users}
-          sortType="dateTime"
-          link="/tai-khoan"
+        <Table
+          title="Tài khoản mới tạo"
+          data={users
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+            .slice(0, 4)}
+          isShowAction={false}
         />
       </div>
     </>

@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "user_id": 123,
+    "order_detail_id": 456,
+    "phone": "9876543210",
+    "address": "123 Main St",
+    "status": "pending",
+    "codeBill": "ABC123",
+    "shipment": "1",
+    "paymentMethod": "credit card",
+    "createdAt": "2022-01-01T12:00:00Z",
+    "updatedAt": "2022-01-01T12:30:00Z"
+  },
+  {
+    "id": 2,
+    "user_id": 456,
+    "order_detail_id": 789,
+    "phone": "1234567890",
+    "address": "456 Elm St",
+    "status": "canceled",
+    "codeBill": "DEF456",
+    "shipment": "2",
+    "paymentMethod": "cash on delivery",
+    "createdAt": "2022-01-02T10:00:00Z",
+    "updatedAt": "2022-01-02T10:30:00Z"
+  },
+  {
+    "id": 3,
+    "user_id": 789,
+    "order_detail_id": 212,
+    "phone": "2345678901",
+    "address": "789 Oak St",
+    "status": "payed",
+    "codeBill": "GHI789",
+    "shipment": "3",
+    "paymentMethod": "paypal",
+    "createdAt": "2022-01-03T08:00:00Z",
+    "updatedAt": "2022-01-03T08:30:00Z"
+  },
+  {
+    "id": 4,
+    "user_id": 112,
+    "order_detail_id": 345,
+    "phone": "3456789012",
+    "address": "012 Pine St",
+    "status": "pending",
+    "codeBill": "JKL012",
+    "shipment": "4",
+    "paymentMethod": "credit card",
+    "createdAt": "2022-01-04T06:00:00Z",
+    "updatedAt": "2022-01-04T06:30:00Z"
+  },
+  {
+    "id": 5,
+    "user_id": 345,
+    "order_detail_id": 678,
+    "phone": "4567890123",
+    "address": "345 Cedar St",
+    "status": "canceled",
+    "codeBill": "MNO345",
+    "shipment": "5",
+    "paymentMethod": "cash on delivery",
+    "createdAt": "2022-01-05T04:00:00Z",
+    "updatedAt": "2022-01-05T04:30:00Z"
+  }
+]

@@ -9,7 +9,7 @@
     "email": "user1@example.com",
     "password": "password1",
     "token": "token1",
-    "visible": false,
+    "visible": true,
     "uid": "uid1",
     "createdAt": "2021-01-01",
     "updatedAt": "2021-01-02"
@@ -39,7 +39,7 @@
     "email": "user3@example.com",
     "password": "password3",
     "token": "token3",
-    "visible": false,
+    "visible": true,
     "uid": "uid3",
     "createdAt": "2021-01-05",
     "updatedAt": "2021-01-06"

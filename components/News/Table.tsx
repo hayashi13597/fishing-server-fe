@@ -1,11 +1,10 @@
 "use client";
 import { useState } from "react";
-import { formatDateTime, formatMoney } from "@/utils";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
-import ModalComponent from "../Products/ModalComponent";
 import FormComponent from "../Products/FormComponent";
+import NewsModal from "./NewsModal";
 
 const itemPerPage: number = 5;
 
@@ -15,7 +14,7 @@ type TableThreeType = {
   isShow?: boolean;
 };
 
-const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
+const Table = ({ title, data, isShow = true }: TableThreeType) => {
   const [pageCurrent, setPageCurrent] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
@@ -67,19 +66,20 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                Tên {title}
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                Tiêu đề
               </th>
-              {isShow && (
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Danh mục
-                </th>
-              )}
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Ngày đăng
+                Nội dung
               </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                Người đăng
+              </th>
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Trạng thái
+              </th>
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                Ngày còn lại
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                 Tác vụ
@@ -92,62 +92,54 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
                 (pageCurrent - 1) * itemPerPage,
                 pageCurrent * itemPerPage
               )
-              .map((product: any, key: any) => (
+              .map((item: any, key: any) => (
                 <tr key={key}>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11 flex items-center gap-2">
-                    <div className="h-12.5 w-15 rounded-md hidden md:block">
-                      <Image
-                        src={product.imageUrl}
-                        width={60}
-                        height={50}
-                        alt={product.name}
-                      />
+                  <td className="border-b border-[#eee] py-5 dark:border-strokedark  flex items-center gap-2">
+                    <div
+                      className="hidden md:block"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        position: "relative",
+                      }}
+                    >
+                      <Image src={item.imageUrl} fill alt={item.title} />
                     </div>
-                    <div className="">
-                      <h5 className="font-medium text-black dark:text-white">
-                        {product.name}
+                    <div className="w-1/2">
+                      <h5 className="font-medium text-black dark:text-white line-clamp-2">
+                        {item.title}
                       </h5>
-                      <p className="text-sm">{formatMoney(product.price)}</p>
                     </div>
                   </td>
-                  {isShow && (
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {product.categoryId === 1
-                          ? "Cần câu"
-                          : product.categoryId === 2
-                          ? "Mồi câu"
-                          : product.categoryId === 3
-                          ? "Món nhậu"
-                          : "Đồ uống"}
-                      </p>
-                    </td>
-                  )}
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {formatDateTime(product.createdAt)}
+                    <p className="text-black dark:text-white line-clamp-2">
+                      {item.content}
                     </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <p className="text-black dark:text-white">{item.user_id}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                        product.visible
+                        item.visible
                           ? "text-success bg-success"
                           : "text-danger bg-danger"
                       }`}
                     >
-                      {product.visible ? "Hiện" : "Ẩn"}
+                      {item.visible ? "Hiện" : "Ẩn"}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div
-                      className={`flex items-center justify-between ${
-                        title == "sản phẩm" ? "gap-3" : ""
-                      }`}
-                    >
+                    <p className="text-black dark:text-white">
+                      {item.timeEvent} ngày
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <div className="flex items-center justify-between gap-3">
                       <button
                         className="hover:text-primary"
-                        onClick={() => showModal(product)}
+                        onClick={() => showModal(item)}
                       >
                         <svg
                           className="fill-current"
@@ -169,13 +161,13 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
                       </button>
                       <button
                         className="hover:text-primary text-xl"
-                        onClick={() => showEditForm(product)}
+                        onClick={() => showEditForm(item)}
                       >
                         <CiEdit />
                       </button>
                       <Popconfirm
                         title="Bạn có chắc muốn xóa không?"
-                        onConfirm={() => handleDelete(product)}
+                        onConfirm={() => handleDelete(item)}
                         okText="Xác nhận"
                         cancelText="Hủy"
                         okType="danger"
@@ -207,7 +199,7 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
         )}
       </div>
       {selected && (
-        <ModalComponent
+        <NewsModal
           selected={selected}
           closeModal={closeModal}
           isModalOpen={isModalOpen}
@@ -216,7 +208,7 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
       {isAdd && (
         <FormComponent
           type="add"
-          title={title}
+          title="tiêu đề"
           isOpen={isAdd}
           closeModal={closeAddFrom}
         />
@@ -224,7 +216,7 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
       {isEdit && (
         <FormComponent
           type="edit"
-          title={title}
+          title="tiêu đề"
           isOpen={isEdit}
           selected={selected}
           closeModal={closeEditFrom}
@@ -234,4 +226,4 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
   );
 };
 
-export default TableThree;
+export default Table;

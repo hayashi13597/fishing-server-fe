@@ -109,7 +109,7 @@ const FormComponent = ({
           <Input placeholder="Nhập tên sản phẩm" />
         </Form.Item>
 
-        {selected?.categoryId && (
+        {title === "sản phẩm" && (
           <Form.Item<FieldType>
             label="Giá"
             name="price"
@@ -125,7 +125,7 @@ const FormComponent = ({
           </Form.Item>
         )}
 
-        {selected?.categoryId && (
+        {title === "sản phẩm" && (
           <Form.Item<FieldType>
             label="Danh mục"
             name="categoryId"

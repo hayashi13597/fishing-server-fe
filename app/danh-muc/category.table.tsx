@@ -4,9 +4,11 @@ import { formatDateTime, formatMoney } from "@/utils";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
-import ModalComponent from "../Products/ModalComponent";
-import FormComponent from "../Products/FormComponent";
+
 import CategoriApi from "@/api-client/category";
+
+import FormComponent from "./FormComponent";
+import ModalComponent from "./ModalComponent";
 
 const itemPerPage: number = 5;
 
@@ -17,7 +19,7 @@ type TableThreeType = {
   setData: any;
 };
 
-const TableThree = ({
+const CateGoriTable = ({
   title,
   data,
   isShow = true,
@@ -246,4 +248,4 @@ const TableThree = ({
   );
 };
 
-export default TableThree;
+export default CateGoriTable;

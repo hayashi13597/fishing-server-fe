@@ -4,25 +4,26 @@ import { formatDateTime, formatMoney } from "@/utils";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
-import ModalComponent from "../Products/ModalComponent";
-import FormComponent from "../Products/FormComponent";
+
 import CategoriApi from "@/api-client/category";
+import FormComponent from "@/components/Products/FormComponent";
+import ModalComponent from "@/components/Products/ModalComponent";
 
 const itemPerPage: number = 5;
 
-type TableThreeType = {
+type ProductTableType = {
   title?: string;
   data?: any;
   isShow?: boolean;
   setData: any;
 };
 
-const TableThree = ({
+const ProductTable = ({
   title,
   data,
   isShow = true,
   setData,
-}: TableThreeType) => {
+}: ProductTableType) => {
   const [pageCurrent, setPageCurrent] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
@@ -246,4 +247,4 @@ const TableThree = ({
   );
 };
 
-export default TableThree;
+export default ProductTable;

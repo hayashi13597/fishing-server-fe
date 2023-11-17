@@ -1,23 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import TableThree from "@/components/Tables/TableThree";
-import CategoriApi from "@/api-client/category";
+import { useSelector, useDispatch } from "react-redux";
+import { UploadCategory } from "@/redux/category/CategorySlicer";
+import { RootState } from "@/redux/store";
+import CateGoriTable from "./category.table";
 // import categories from "@/mock/categories.json";
 
 const Category = () => {
+  const listCate = useSelector((state: RootState) => state.cate.listCate);
   const [listCategories, setCategories] = useState([]);
+  const dispatch = useDispatch();
   useEffect(() => {
-    CategoriApi.getAll().then((res) => {
-      setCategories(res.data.categories);
-    });
-  }, []);
-  console.log("listCategories", listCategories);
+    setCategories(listCate);
+    dispatch(UploadCategory(listCate));
+  }, [listCate.length]);
   return (
     <>
       <Breadcrumb pageName="Danh mục" />
       <div className="flex flex-col gap-10">
-        <TableThree
+        <CateGoriTable
           title="danh mục"
           setData={setCategories}
           data={listCategories}

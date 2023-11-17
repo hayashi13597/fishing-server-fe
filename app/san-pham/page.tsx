@@ -1,14 +1,21 @@
+"use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import React from "react";
-import TableThree from "@/components/Tables/TableThree";
-import products from "@/mock/products.json";
+import React, { use, useState } from "react";
+
+import productsss from "@/mock/products.json";
+import ProductTable from "./product.table";
 
 const Products = () => {
+  const [products, setListProduct] = useState(productsss);
   return (
     <>
       <Breadcrumb pageName="Sản phẩm" />
       <div className="flex flex-col gap-10">
-        <TableThree title="sản phẩm" data={products} />
+        <ProductTable
+          setData={setListProduct}
+          title="sản phẩm"
+          data={products}
+        />
       </div>
     </>
   );

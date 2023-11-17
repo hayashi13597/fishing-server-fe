@@ -12,7 +12,7 @@ type TableThreeType = {
   data?: any;
   isShowAction?: boolean;
   title?: string;
-  setData: any;
+  setData?: any;
 };
 
 const Table = ({

@@ -3,14 +3,16 @@ const initState = {
   avatar: "https://i.imgur.com/iOTWGLo.png",
   address: "",
   phone: "",
-  visiable: false,
+  visiable: true,
   role: "admin",
   uid: "",
-  id: 4,
-  email: "admin@gmail.com",
-  fullname: "Admin",
+  id: 1,
+  email: "admin11ss23@gmail.com",
+  fullname: "Test 1",
   accessToken:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTcwMDIwMDc3NywiZXhwIjoxNzAwNDU5OTc3fQ.n8dQm0u4DIAUbJTgEleeuA2PPsfznZow2fgs_D9_PT0",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTFzczIzQGdtYWlsLmNvbSIsImlhdCI6MTcwMDI0ODA0NiwiZXhwIjoxNzAwNTA3MjQ2fQ.nvn8aTVOu1CMk8QDjgwcMfTzd5RJ9tjVG2WyGtHuPCs",
+  refreshToken:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTFzczIzQGdtYWlsLmNvbSIsImlhdCI6MTcwMDI0ODA0NiwiZXhwIjoxNzAxMTEyMDQ2fQ.ewLCyiXMQ7x493sL3w6SpcWDShUx6A6qwrP9LcenR4w",
 };
 const AccountSlice = createSlice({
   name: "account",

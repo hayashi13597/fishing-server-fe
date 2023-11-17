@@ -3,8 +3,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
-import FormComponent from "../Products/FormComponent";
+import NewApi from "@/api-client/new";
 import NewsModal from "./NewsModal";
+import FormComponent from "./FormComponent";
 
 const itemPerPage: number = 5;
 
@@ -12,9 +13,10 @@ type TableThreeType = {
   title?: string;
   data?: any;
   isShow?: boolean;
+  setData: any;
 };
 
-const Table = ({ title, data, isShow = true }: TableThreeType) => {
+const Table = ({ title, data, isShow = true, setData }: TableThreeType) => {
   const [pageCurrent, setPageCurrent] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
@@ -48,8 +50,18 @@ const Table = ({ title, data, isShow = true }: TableThreeType) => {
   };
 
   const handleDelete = (data: any) => {
-    console.log(data);
-    message.success("Xóa thành công");
+    if (data.id) {
+      NewApi.Delete(data.id)
+        .then((res: any) => {
+          message.success(res.message);
+          setData((listNews: any[]) =>
+            listNews.filter((item: any) => item.id != data.id)
+          );
+        })
+        .catch((res: any) => {
+          message.error(res.message);
+        });
+    }
   };
 
   return (
@@ -113,21 +125,23 @@ const Table = ({ title, data, isShow = true }: TableThreeType) => {
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p className="text-black dark:text-white line-clamp-2">
-                      {item.content}
+                      {item.description}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{item.user_id}</p>
+                    <p className="text-black dark:text-white">
+                      {item?.User?.fullname}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                        item.visible
+                        item.visiable
                           ? "text-success bg-success"
                           : "text-danger bg-danger"
                       }`}
                     >
-                      {item.visible ? "Hiện" : "Ẩn"}
+                      {item.visiable ? "Hiện" : "Ẩn"}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -207,16 +221,18 @@ const Table = ({ title, data, isShow = true }: TableThreeType) => {
       )}
       {isAdd && (
         <FormComponent
+          setData={setData}
           type="add"
-          title="tiêu đề"
+          title="Tin tức - Sự kiện"
           isOpen={isAdd}
           closeModal={closeAddFrom}
         />
       )}
       {isEdit && (
         <FormComponent
+          setData={setData}
           type="edit"
-          title="tiêu đề"
+          title="Tin tức - Sự kiện"
           isOpen={isEdit}
           selected={selected}
           closeModal={closeEditFrom}

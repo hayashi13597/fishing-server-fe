@@ -1,15 +1,26 @@
+"use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Table from "@/components/News/Table";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import NewApi from "@/api-client/new/";
 import data from "@/mock/news_events.json";
 
 const NewsAndEvents = () => {
+  const [ListNews, setListNews] = useState([]);
+  useEffect(() => {
+    NewApi.GetAll().then((res) => {
+      setListNews(() => res.data.events);
+    });
+  }, []);
   return (
     <>
       <Breadcrumb pageName="Tin tức - Sự kiện" />
       <div className="flex flex-col gap-10">
-        <Table title="tin tức - sự kiện" data={data} />
+        <Table
+          setData={setListNews}
+          title="tin tức - sự kiện"
+          data={ListNews}
+        />
       </div>
     </>
   );

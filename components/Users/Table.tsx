@@ -5,16 +5,22 @@ import { Pagination, Popconfirm, message } from "antd";
 import UserModal from "./UserModal";
 import UserForm from "./UserForm";
 import Link from "next/link";
-
+import UserApi from "@/api-client/user";
 const itemPerPage: number = 5;
 
 type TableThreeType = {
   data?: any;
   isShowAction?: boolean;
   title?: string;
+  setData: any;
 };
 
-const Table = ({ data, isShowAction = true, title }: TableThreeType) => {
+const Table = ({
+  data,
+  isShowAction = true,
+  title,
+  setData,
+}: TableThreeType) => {
   const [pageCurrent, setPageCurrent] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -39,8 +45,18 @@ const Table = ({ data, isShowAction = true, title }: TableThreeType) => {
   };
 
   const handleDelete = (data: any) => {
-    console.log(data);
-    message.success("Xóa thành công");
+    if (data.id) {
+      UserApi.Delete(data.id)
+        .then((res: any) => {
+          message.success(res.message);
+          setData((accounts: any[]) =>
+            accounts.filter((item) => item.id != data.id)
+          );
+        })
+        .catch((res) => {
+          message.error(res.message);
+        });
+    }
   };
 
   return (
@@ -64,11 +80,9 @@ const Table = ({ data, isShowAction = true, title }: TableThreeType) => {
                 <th className="min-w-[200px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   Email
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Username
-                </th>
+
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  FullName
+                  Họ và tên
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   Trạng thái
@@ -94,25 +108,21 @@ const Table = ({ data, isShowAction = true, title }: TableThreeType) => {
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">{user.email}</p>
                     </td>
+
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {user.username}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {user.fullName}
+                        {user.fullname}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p
                         className={`inline-flex rounded-full bg-opacity-10 py-1 px-2 text-sm font-medium ${
-                          user.visible
+                          user.visiable
                             ? "text-success bg-success"
                             : "text-danger bg-danger"
                         }`}
                       >
-                        {user.visible ? "Hoạt động" : "Khóa"}
+                        {user.visiable ? "Hoạt động" : "Khóa"}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -195,6 +205,7 @@ const Table = ({ data, isShowAction = true, title }: TableThreeType) => {
             isOpen={isEdit}
             selected={selected}
             closeModal={closeEditFrom}
+            setData={setData}
           />
         )}
       </div>

@@ -99,7 +99,7 @@
     "stock": "10",
     "sell": 240,
     "discount": 0,
-    "categoryId": 1,
+    "categoryId": 5,
     "visible": false,
     "createdAt": "2022-01-07T12:00:00Z",
     "updatedAt": "2022-01-07T12:00:00Z"
@@ -114,7 +114,7 @@
     "stock": "Out of stock",
     "sell": 310,
     "discount": 0,
-    "categoryId": 1,
+    "categoryId": 5,
     "visible": false,
     "createdAt": "2022-01-08T12:00:00Z",
     "updatedAt": "2022-01-08T12:00:00Z"

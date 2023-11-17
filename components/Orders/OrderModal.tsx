@@ -1,28 +1,28 @@
-import React from "react";
-import { Button, Modal } from "antd";
+import React, { useState } from "react";
+import { Button, Modal, Pagination } from "antd";
 import Image from "next/image";
-import { formatDateTime, formatMoney } from "@/utils";
+import { formatMoney } from "@/utils";
+
+import products from "@/mock/products.json";
 
 type ModalType = {
   closeModal?: () => void;
   selected: any;
   isModalOpen?: boolean;
+  setPageCurrentModal?: any;
+  pageCurrentModal?: number;
 };
 
-const OrderModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
-  const {
-    id,
-    user_id,
-    status,
-    order_detail_id,
-    phone,
-    address,
-    codeBill,
-    shipment,
-    paymentMethod,
-    createdAt,
-    updatedAt,
-  } = selected;
+const itemPerPage: number = 3;
+
+const OrderModal = ({
+  closeModal,
+  isModalOpen,
+  selected,
+  pageCurrentModal = 1,
+  setPageCurrentModal,
+}: ModalType) => {
+  const { id } = selected;
 
   return (
     <>
@@ -37,51 +37,81 @@ const OrderModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
           </Button>,
         ]}
       >
-        <div className="flex gap-5 py-3">
-          <div className="w-2/3">
-            <h3 className="mt-1 md:mt-3">
-              <span className="font-medium">Mã đơn hàng: </span> #{id}
-            </h3>
-            <h3 className="mt-1 md:mt-3">
-              <span className="font-medium">Tên khách hàng:</span> {user_id}
-            </h3>
-            <h3 className="mt-1 md:mt-3">
-              <span className="font-medium">Số điện thoại:</span> {phone}
-            </h3>
-            <p className="mt-1 md:mt-3">
-              <span className="font-medium">Địa chỉ:</span> {address}
-            </p>
-            <p className="mt-1 md:mt-3">
-              <span className="font-medium">Mã bill:</span> {codeBill}
-            </p>
-            <p className="mt-1 md:mt-3">
-              <span className="font-medium">Phương thức thanh toán:</span>{" "}
-              {paymentMethod}
-            </p>
-            <p className="mt-1 md:mt-3 text-sm md:text-base">
-              <span className="font-medium mr-1">Ngày đặt hàng:</span>{" "}
-              <br className="block md:hidden" /> {formatDateTime(createdAt)}
-            </p>
-            <p className="mt-1 md:mt-3">
-              <span className="font-medium mr-1">Trạng thái:</span>
-              <span
-                className={`inline-flex rounded-full bg-opacity-10 py-1 px-2 text-sm font-medium ${
-                  status === "payed"
-                    ? "text-success bg-success"
-                    : status === "canceled"
-                    ? "text-danger bg-danger"
-                    : "text-warning bg-warning"
-                }`}
-              >
-                {status === "payed"
-                  ? "Đã thanh toán"
-                  : status === "canceled"
-                  ? "Hủy"
-                  : "Chưa thanh toán"}
-              </span>
-            </p>
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              <th className="min-w-[200px] py-4 px-4 font-medium text-black">
+                Tên sản phẩm
+              </th>
+              <th className="min-w-[150px] py-4 px-4 font-medium text-black">
+                Hình ảnh
+              </th>
+              <th className="min-w-[120px] py-4 px-4 font-medium text-black">
+                Số lượng
+              </th>
+              <th className="min-w-[120px] py-4 px-4 font-medium text-black">
+                Tổng tiền
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {products
+              ?.filter((product) => product.categoryId === id)
+              .slice(
+                (pageCurrentModal - 1) * itemPerPage,
+                pageCurrentModal * itemPerPage
+              )
+              .map((product) => (
+                <tr>
+                  <td className="border-b border-[#eee] py-5 px-4">
+                    <p className="text-black">{product.name}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4">
+                    <div
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        position: "relative",
+                      }}
+                    >
+                      <Image src={product.imageUrl} alt={product.name} fill />
+                    </div>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4">
+                    <p className="text-black">{product.sell}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4">
+                    <p className="text-black">
+                      {formatMoney(product.price * product.sell)}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        {products?.filter((product) => product.categoryId === selected.id)
+          ?.length > 0 && (
+          <div
+            className={`w-full flex justify-center py-5 md:py-4 S${
+              itemPerPage >=
+              products?.filter((product) => product.categoryId === id)?.length
+                ? "hidden"
+                : ""
+            }`}
+          >
+            <Pagination
+              defaultCurrent={1}
+              total={
+                products?.filter(
+                  (product) => product.categoryId === selected.id
+                )?.length
+              }
+              pageSize={itemPerPage}
+              current={pageCurrentModal}
+              onChange={(page) => setPageCurrentModal(page)}
+            />
           </div>
-        </div>
+        )}
       </Modal>
     </>
   );

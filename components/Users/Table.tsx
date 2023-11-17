@@ -120,7 +120,7 @@ const Table = ({ data, isShowAction = true, title }: TableThreeType) => {
                     </td>
                     {isShowAction && (
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center justify-center gap-3">
                           <button
                             className="hover:text-primary"
                             onClick={() => showModal(user)}

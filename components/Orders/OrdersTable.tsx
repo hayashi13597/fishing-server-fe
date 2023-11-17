@@ -16,8 +16,8 @@ type TableThreeType = {
 
 const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
   const [pageCurrent, setPageCurrent] = useState(1);
+  const [pageCurrentModal, setPageCurrentModal] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAdd, setIsAdd] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selected, setSelected] = useState(null);
 
@@ -28,6 +28,7 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setPageCurrentModal(1);
   };
 
   const showEditForm = (product: any) => {
@@ -110,7 +111,7 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center justify-center gap-3">
                       <button
                         className="hover:text-primary"
                         onClick={() => showModal(item)}
@@ -177,6 +178,8 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
           selected={selected}
           closeModal={closeModal}
           isModalOpen={isModalOpen}
+          pageCurrentModal={pageCurrentModal}
+          setPageCurrentModal={setPageCurrentModal}
         />
       )}
       {isEdit && (

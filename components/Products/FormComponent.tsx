@@ -38,7 +38,7 @@ type FormComponentType = {
   isOpen?: boolean;
   closeModal?: () => void;
   selected?: any;
-  setData: any;
+  setData?: any;
   id?: string;
 };
 

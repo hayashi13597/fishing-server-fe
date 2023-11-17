@@ -3,6 +3,8 @@ import { Button, Form, Input, Modal, Select, Upload, message } from "antd";
 import categories from "@/mock/categories.json";
 import type { UploadProps } from "antd";
 import EditorContent from "./EditorContent";
+import UploadImageApi from "@/api-client/uploadfile";
+import CategoriApi from "@/api-client/category";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -36,6 +38,8 @@ type FormComponentType = {
   isOpen?: boolean;
   closeModal?: () => void;
   selected?: any;
+  setData: any;
+  id?: string;
 };
 
 const FormComponent = ({
@@ -44,19 +48,85 @@ const FormComponent = ({
   isOpen,
   closeModal,
   selected,
+
+  setData,
 }: FormComponentType) => {
   const [form] = Form.useForm();
   const [text, setText] = useState("");
+  const initData = {
+    imageUrl: selected?.imageUrl || "",
+    idPath: selected?.idPath || "",
+    user_id: 2,
+    name: selected?.name || "",
+    description: selected?.description || "",
+    visiable: true,
+  };
+  const [DataSubmit, setDataSubmit] = useState(initData);
 
   const onFinish = (values: any) => {
-    values.createdAt = new Date();
-    values.updatedAt = new Date();
-    console.log(values);
-    message.success(`${type === "add" ? "Thêm" : "Cập nhật"} thành công`);
+    // chưa có login nên user_id default=2
+    if (type == "add") {
+      const { name, description, visiable = true } = values;
+      console.log("DataSubmit", DataSubmit);
+      if (!name || !description || !DataSubmit.imageUrl) {
+        message.error("Thêm thất bại");
+        return;
+      }
+      const dataUpload: any = {
+        imageUrl: DataSubmit.imageUrl,
+        idPath: DataSubmit.idPath,
+        user_id: 2,
+        name,
+        description,
+        visiable,
+      };
+      CategoriApi.add(dataUpload)
+        .then((res: any) => {
+          setData((prev: any[]) => [...prev, res.data.category]);
+          form.resetFields();
+          message.success(res.message);
+          closeModal && closeModal();
+        })
+        .catch((res) => {
+          message.error(res.message);
+        });
+    } else {
+      if (!selected?.id) {
+        message.error("Thiếu id sao sửa");
+      }
+      const { name, description, visiable = true } = values;
+      const dataUpload = {
+        imageUrl: DataSubmit.imageUrl || selected.imageUrl,
+        idPath: DataSubmit.idPath || selected.idPath,
+        user_id: 2,
+        name,
+        description,
+        visiable,
+      };
+      if (!dataUpload.imageUrl) {
+        message.success("Vui lòng nhờ ảnh upload");
+      }
+
+      CategoriApi.edit(`${selected.id}`, dataUpload)
+        .then((res: any) => {
+          setData((prev: any[]) => {
+            if (prev?.length < 0) return prev;
+            const listCate = prev.filter((item) => item.id != selected.id);
+            listCate.unshift(res.data.category);
+            return listCate;
+          });
+          form.resetFields();
+          message.success(res.message);
+          closeModal && closeModal();
+        })
+        .catch(({ message }) => {
+          message.error(message);
+        });
+    }
   };
 
   const props: UploadProps = {
-    name: "imageUrl",
+    name: "fileupload",
     listType: "picture",
     multiple: true,
     defaultFileList: selected && [
@@ -78,15 +148,29 @@ const FormComponent = ({
         message.error(`${file.name} lớn hơn 2MB!`);
         return Upload.LIST_IGNORE;
       }
+      const FormDataFile = new FormData();
+      FormDataFile.append("file", file);
+
+      UploadImageApi.add(FormDataFile).then((res: any) => {
+        setDataSubmit((prev) => ({
+          ...prev,
+          idPath: res.idPath,
+          imageUrl: res.imageUrl,
+        }));
+        message.success("Bạn có thể tạo danh mục");
+      });
       return false;
     },
-    onRemove(file) {
-      console.log(file);
+    onRemove() {
+      if (DataSubmit.idPath) {
+        UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {
+          console.log(res);
+        });
+      }
     },
     onChange({ file, fileList }) {
-      console.log(file);
       if (fileList.length < 1) {
-        form.setFieldValue("imageUrl", null);
+        form.setFieldValue("fileupload", null);
       }
     },
     action: "link",
@@ -326,7 +410,10 @@ const FormComponent = ({
               name="imageUrl"
               label="Hình ảnh"
               rules={[
-                { required: true, message: "Hình ảnh không được để trống!" },
+                {
+                  required: DataSubmit?.imageUrl ? false : true,
+                  message: "Hình ảnh không được để trống!",
+                },
               ]}
             >
               <Upload {...props}>

@@ -6,6 +6,7 @@ import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
 import ModalComponent from "../Products/ModalComponent";
 import FormComponent from "../Products/FormComponent";
+import CategoriApi from "@/api-client/category";
 
 const itemPerPage: number = 5;
 
@@ -13,9 +14,15 @@ type TableThreeType = {
   title?: string;
   data?: any;
   isShow?: boolean;
+  setData: any;
 };
 
-const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
+const TableThree = ({
+  title,
+  data,
+  isShow = true,
+  setData,
+}: TableThreeType) => {
   const [pageCurrent, setPageCurrent] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
@@ -42,6 +49,7 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
   const showEditForm = (product: any) => {
     setIsEdit(true);
     setSelected(product);
+    console.log(product);
   };
 
   const closeEditFrom = () => {
@@ -49,8 +57,16 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
   };
 
   const handleDelete = (data: any) => {
-    console.log(data);
-    message.success("Xóa thành công");
+    if (data.id) {
+      CategoriApi.delete(data.id)
+        .then(() => {
+          message.success("Xóa thành công");
+          setData((prev: any[]) => prev.filter((item) => item.id != data.id));
+        })
+        .catch(() => {
+          message.error("Xóa thất bại");
+        });
+    }
   };
 
   return (
@@ -112,14 +128,8 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
                   </td>
                   {isShow && (
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {product.categoryId === 1
-                          ? "Cần câu"
-                          : product.categoryId === 2
-                          ? "Mồi câu"
-                          : product.categoryId === 3
-                          ? "Món nhậu"
-                          : "Đồ uống"}
+                      <p className="text-black dark:text-white capitalize">
+                        {product.name}
                       </p>
                     </td>
                   )}
@@ -131,12 +141,12 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                        product.visible
+                        product.visiable
                           ? "text-success bg-success"
                           : "text-danger bg-danger"
                       }`}
                     >
-                      {product.visible ? "Hiện" : "Ẩn"}
+                      {product.visiable ? "Hiện" : "Ẩn"}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -218,6 +228,7 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
           type="add"
           title={title}
           isOpen={isAdd}
+          setData={setData}
           closeModal={closeAddFrom}
         />
       )}
@@ -227,6 +238,7 @@ const TableThree = ({ title, data, isShow = true }: TableThreeType) => {
           title={title}
           isOpen={isEdit}
           selected={selected}
+          setData={setData}
           closeModal={closeEditFrom}
         />
       )}

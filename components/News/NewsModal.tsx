@@ -19,8 +19,8 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
     description,
     isEvent,
     timeEvent,
-    user_id,
-    id,
+    User,
+    visiable,
   } = selected;
 
   return (
@@ -53,10 +53,10 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
               Tiêu đề: <span className="font-semibold">{title}</span>
             </h3>
             <h3 className="mt-1 md:mt-3 line-clamp-3">
-              <span className="font-medium">Nội dung:</span> {content}
+              <span className="font-medium">Mô tả:</span> {description}
             </h3>
             <h3 className="mt-1 md:mt-3">
-              <span className="font-medium">Người đăng:</span> {user_id}
+              <span className="font-medium">Người đăng:</span> {User?.fullname}
             </h3>
             <p className="mt-1 md:mt-3 line-clamp-3">
               <span className="font-medium">Mô tả:</span> {description}
@@ -69,10 +69,10 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
               <span className="font-medium mr-1">Trạng thái:</span>
               <span
                 className={`inline-flex rounded-full bg-opacity-10 py-1 px-2 text-sm font-medium ${
-                  visible ? "text-success bg-success" : "text-danger bg-danger"
+                  visiable ? "text-success bg-success" : "text-danger bg-danger"
                 }`}
               >
-                {visible ? "Hoạt động" : "Khóa"}
+                {visiable ? "Hoạt động" : "Khóa"}
               </span>
             </p>
           </div>

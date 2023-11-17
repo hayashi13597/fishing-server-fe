@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "antd";
 import Image from "next/image";
-import { formatDateTime, formatMoney } from "@/utils";
+import { formatDateTime } from "@/utils";
 
 type ModalType = {
   closeModal?: () => void;
@@ -12,13 +12,14 @@ type ModalType = {
 const UserModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
   const {
     email,
-    username,
-    fullName,
+
+    fullname,
     visible,
     role,
     avatar,
     createdAt,
-    updatedAt,
+    address,
+    phone,
   } = selected;
   selected;
 
@@ -51,12 +52,17 @@ const UserModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
             <h3 className="text-xl">
               Email: <span className="font-semibold ">{email}</span>
             </h3>
+
             <p className="mt-1 md:mt-3">
-              Username: <span className="font-semibold ">{username}</span>
+              Họ và tên: <span className="font-semibold ">{fullname}</span>
             </p>
             <p className="mt-1 md:mt-3">
-              Họ và tên: <span className="font-semibold ">{fullName}</span>
+              Số điện thoại: <span className="font-semibold ">{phone}</span>
             </p>
+            <p className="mt-1 md:mt-3">
+              Địa chỉ: <span className="font-semibold ">{address}</span>
+            </p>
+
             <p className="mt-1 md:mt-3">
               Vài trò: <span className="font-semibold ">{role}</span>
             </p>

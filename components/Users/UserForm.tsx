@@ -1,12 +1,12 @@
 import React from "react";
 import { Form, Input, Modal, Select, message } from "antd";
-
+import UserApi from "@/api-client/user";
 const { Option } = Select;
 
 type FieldType = {
   email?: string;
   username?: string;
-  fullName?: string;
+  fullname?: string;
   avatar?: string;
   role?: string;
   createdAt?: Date;
@@ -18,18 +18,50 @@ type FormComponentType = {
   isOpen?: boolean;
   closeModal?: () => void;
   selected?: any;
+  setData: any;
 };
 
-const UserForm = ({ isOpen, closeModal, selected }: FormComponentType) => {
+const UserForm = ({
+  isOpen,
+  closeModal,
+  selected,
+  setData,
+}: FormComponentType) => {
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
-    values.createdAt = new Date();
-    values.updatedAt = new Date();
-    console.log(values);
-    message.success(`Cập nhật tài khoản thành công`);
+    const UserEditData = { ...values, id: selected.id };
+    UserApi.Edit(UserEditData)
+      .then((res: any) => {
+        message.success(res.message);
+        const accountedit = { ...selected, ...values };
+        setData((account: any[]) => {
+          return [
+            accountedit,
+            ...account.filter((user) => user.id != selected.id),
+          ];
+        });
+        closeModal && closeModal();
+      })
+      .catch((err) => {
+        message.error(err?.message);
+      });
   };
+  const handleResetPassword = () => {
+    if (!selected.id) {
+      message.error("Vui lòng mở lại thông tin user");
+      return;
+    }
+    UserApi.ResetPassword(selected.id)
+      .then((res: any) => {
+        message.success(res.message);
 
+        closeModal && closeModal();
+      })
+      .catch((err) => {
+        message.error(err?.message);
+      });
+  };
   return (
     <Modal
       title={`Sửa tài khoản`}
@@ -62,23 +94,9 @@ const UserForm = ({ isOpen, closeModal, selected }: FormComponentType) => {
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Username"
-          name="username"
-          initialValue={selected?.username || ""}
-          rules={[
-            {
-              required: true,
-              message: "Uername không được để trống!",
-            },
-          ]}
-        >
-          <Input placeholder="Nhập username" disabled />
-        </Form.Item>
-
-        <Form.Item<FieldType>
           label="Họ và tên"
-          name="fullName"
-          initialValue={selected?.fullName || null}
+          name="fullname"
+          initialValue={selected?.fullname || null}
           rules={[
             { required: true, message: "Họ và tên không được để trống!" },
           ]}
@@ -89,13 +107,7 @@ const UserForm = ({ isOpen, closeModal, selected }: FormComponentType) => {
         <Form.Item<FieldType>
           label="Vai trò"
           name="role"
-          initialValue={
-            selected?.role === "admin"
-              ? "admin"
-              : selected?.role === "manager"
-              ? "manager"
-              : "member"
-          }
+          initialValue={selected.role || "member"}
           rules={[{ required: true, message: "Vai trò không được để trống!" }]}
         >
           <Select placeholder="Hãy chọn vài trò" allowClear>
@@ -122,10 +134,17 @@ const UserForm = ({ isOpen, closeModal, selected }: FormComponentType) => {
         </Form.Item>
         <Form.Item wrapperCol={{ span: 23, style: { alignItems: "end" } }}>
           <button
+            onClick={handleResetPassword}
+            className="inline-flex items-center justify-center rounded-md bg-meta-1 py-2.5 px-10 mr-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            type="button"
+          >
+            Làm mới mật khẩu
+          </button>
+          <button
             className="inline-flex items-center justify-center rounded-md bg-primary py-2.5 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             type="submit"
           >
-            Cập nhật
+            Cập nhật hồ sô
           </button>
         </Form.Item>
       </Form>

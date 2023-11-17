@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-
+  const account = useSelector((state: RootState) => state.account.account);
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -43,18 +44,19 @@ const DropdownUser = () => {
         href="#"
       >
         <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
-            Hồ Phúc Lâm
+          <span className="block text-sm font-medium text-black dark:text-white capitalize">
+            {account.fullname}
           </span>
-          <span className="block text-xs">Quản trị viên</span>
+          <span className="block text-xs capitalize"> {account.role}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full overflow-hidden">
           <Image
             width={112}
             height={112}
-            src={"/assets/user-avt.png"}
+            src={account.avatar}
             alt="User"
+            className="object-cover"
           />
         </span>
 

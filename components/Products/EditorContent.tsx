@@ -18,7 +18,7 @@ const toolbarOptions = [
   [{ script: "sub" }, { script: "super" }], // superscript/subscript
   [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
   [{ direction: "rtl" }], // text direction
-  ["link", "video"],
+  ["link", "video", "image"],
   [{ size: ["small", false, "large", "huge"] }], // custom dropdown
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
@@ -29,7 +29,9 @@ const toolbarOptions = [
   ["clean"], // remove formatting button
 ];
 const moduleOptions = {
-  toolbar: toolbarOptions,
+  toolbar: {
+    container: toolbarOptions,
+  },
 };
 
 const EditorContent: React.FC<EditorContentProps> = ({
@@ -40,24 +42,27 @@ const EditorContent: React.FC<EditorContentProps> = ({
   let covertText = text;
   const handleChange = (value: string) => {
     let newvalue = value;
-    if (newvalue.includes("*")) {
-      newvalue = newvalue.replace(/\*/g, "");
+    if (newvalue) {
+      if (newvalue.includes("*")) {
+        newvalue = newvalue.replace(/\*/g, "");
+      }
+      if (newvalue.includes("image")) {
+        newvalue = newvalue.replace(
+          /linkimage(.*?)linkimage/g,
+          `<img width="300" height="150" src="$1" class="sm:max-w-[600px] max-w-full sm:w-auto w-full h-auto object-cover" alt="${title}" />`
+        );
+      }
+      if (newvalue.includes("video")) {
+        newvalue = newvalue.replace(
+          /linkvideo(.*?)linkvideo/g,
+          `<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+        );
+      }
     }
-    if (newvalue.includes("image")) {
-      newvalue = newvalue.replace(
-        /linkimage(.*?)linkimage/g,
-        `<img width="300" height="150" src="$1" class="sm:max-w-[600px] max-w-full sm:w-auto w-full h-auto object-cover" alt="${title}" />`
-      );
-    }
-    if (newvalue.includes("video")) {
-      newvalue = newvalue.replace(
-        /linkvideo(.*?)linkvideo/g,
-        `<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
-      );
-    }
+
     setText(newvalue);
   };
-  if (covertText.includes("display: none !important;")) {
+  if (covertText && covertText.includes("display: none !important;")) {
     covertText = covertText.replace(/style\s*=\s*["'][^"']*["']/g, "");
   }
 

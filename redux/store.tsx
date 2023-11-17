@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import CategorySlicer from "./category/CategorySlicer";
+import AccountSlicer from "./account/AccountSlicer";
 
 export const store = configureStore({
   reducer: {
     cate: CategorySlicer,
+    account: AccountSlicer,
   },
 });
 

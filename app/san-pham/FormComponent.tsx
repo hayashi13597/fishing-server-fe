@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { Button, Form, Input, Modal, Select, Upload, message } from "antd";
 import categories from "@/mock/categories.json";
 import type { UploadProps } from "antd";
+
 import UploadImageApi from "@/api-client/uploadfile";
 import CategoriApi from "@/api-client/category";
 import EditorContent from "@/components/Products/EditorContent";
-import { useDispatch, useSelector } from "react-redux";
-import { UploadCategory } from "@/redux/category/CategorySlicer";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import ProductsApi from "@/api-client/product";
 const { Option } = Select;
 const { TextArea } = Input;
-
+interface ListImageUrl {
+  imageUrl: String;
+  idPath: String;
+}
 type FieldType = {
   name?: string;
   price?: number;
@@ -32,6 +36,7 @@ type FieldType = {
   codeBill?: string;
   shipment?: number;
   paymentMethod?: string;
+  saleoff?: string;
 };
 
 type FormComponentType = {
@@ -56,42 +61,59 @@ const FormComponent = ({
   const [form] = Form.useForm();
   const [text, setText] = useState("");
   const account = useSelector((state: RootState) => state.account.account);
-  const initData = {
-    imageUrl: selected?.imageUrl || "",
-    idPath: selected?.idPath || "",
-    user_id: account.id,
-    name: selected?.name || "",
-    description: selected?.description || "",
-    visiable: true,
-  };
-  const [DataSubmit, setDataSubmit] = useState(initData);
-  const dispatch = useDispatch();
+  let listImageRender: any[] = [];
+  try {
+    listImageRender = JSON.parse(selected?.listSubimages || []) || [];
+
+    listImageRender = listImageRender.map((item, index) => ({
+      uid: item.idPath,
+      name: (selected?.name || selected?.title) + " ảnh phụ " + index,
+      url: item.imageUrl,
+    }));
+  } catch {}
+  const [listSubImage, setListSubImage] = useState<ListImageUrl[]>(
+    listImageRender || []
+  );
+  const Categories = useSelector((state: RootState) => state.cate.listCate);
   const onFinish = (values: any) => {
-    // chưa có login nên user_id default=2
+    const {
+      categoryId,
+      description,
+      name,
+      price,
+      saleoff,
+      visiable = true,
+    } = values;
     if (type == "add") {
-      const { name, description, visiable = true } = values;
-      console.log("DataSubmit", DataSubmit);
-      if (!name || !description || !DataSubmit.imageUrl) {
-        message.error("Thêm thất bại");
+      if (listSubImage.length < 1) {
+        message.error("Yêu cầu tối thiểu 1 hình ảnh");
         return;
       }
-      const dataUpload: any = {
-        imageUrl: DataSubmit.imageUrl,
-        idPath: DataSubmit.idPath,
-        user_id: 2,
-        name,
+
+      if (!description || !name || !categoryId) {
+        message.error("Vui lòng điền đầy đủ thông tin");
+        return;
+      }
+      const { imageUrl = "", idPath = "" } = listSubImage[0];
+      // listSubImage.shift();
+      const DataUpload: any = {
+        imageUrl,
+        idPath,
+        category_id: categoryId,
         description,
+        name,
+        price,
+        user_id: account.id,
+        saleoff,
         visiable,
+        listSubimages: JSON.stringify(listSubImage),
       };
-      CategoriApi.add(dataUpload)
+
+      ProductsApi.add(DataUpload)
         .then((res: any) => {
-          setData((prev: any[]) => {
-            const newListCates = [...prev, res.data.category];
-            dispatch(UploadCategory(newListCates));
-            return newListCates;
-          });
-          form.resetFields();
           message.success(res.message);
+          setData((prev: any[]) => [res.data.product, ...prev]);
+          setListSubImage([]);
           closeModal && closeModal();
         })
         .catch((res) => {
@@ -101,34 +123,31 @@ const FormComponent = ({
       if (!selected?.id) {
         message.error("Thiếu id sao sửa");
       }
-      const { name, description, visiable = true } = values;
-      const dataUpload = {
-        imageUrl: DataSubmit.imageUrl || selected.imageUrl,
-        idPath: DataSubmit.idPath || selected.idPath,
-        user_id: 2,
-        name,
+      const dataEdit: any = {
         description,
+        name,
+        price,
+        saleoff,
         visiable,
+        category_id: categoryId,
+        imageUrl: selected?.imageUrl,
+        idPath: selected?.idPath,
+        id: selected?.id,
       };
-      if (!dataUpload.imageUrl) {
-        message.success("Vui lòng nhờ ảnh upload");
+      if (listSubImage.length) {
+        dataEdit.listSubImage = JSON.stringify(
+          listSubImage.filter((item: any) => !item.uid)
+        );
       }
-
-      CategoriApi.edit(`${selected.id}`, dataUpload)
+      ProductsApi.edit(dataEdit)
         .then((res: any) => {
-          setData((prev: any[]) => {
-            if (prev?.length < 0) return prev;
-            const listCate = prev.filter((item) => item.id != selected.id);
-            listCate.unshift(res.data.category);
-            dispatch(UploadCategory(listCate));
-            return listCate;
-          });
-          form.resetFields();
           message.success(res.message);
+          setData(() => res.data.products);
+          setListSubImage([]);
           closeModal && closeModal();
         })
-        .catch(({ message }) => {
-          message.error(message);
+        .catch((res) => {
+          message.error(res.message);
         });
     }
   };
@@ -136,13 +155,14 @@ const FormComponent = ({
   const props: UploadProps = {
     name: "fileupload",
     listType: "picture",
-    multiple: false,
+    multiple: true,
     defaultFileList: selected && [
       {
         uid: selected?.id.toString(),
         name: selected?.name || selected?.title,
         url: selected?.imageUrl,
       },
+      ...listImageRender,
     ],
     beforeUpload(file) {
       const isJpgOrPng =
@@ -160,20 +180,27 @@ const FormComponent = ({
       FormDataFile.append("file", file);
 
       UploadImageApi.add(FormDataFile).then((res: any) => {
-        setDataSubmit((prev) => ({
+        setListSubImage((prev) => [
           ...prev,
-          idPath: res.idPath,
-          imageUrl: res.imageUrl,
-        }));
+          { idPath: res.idPath, imageUrl: res.imageUrl },
+        ]);
         message.success("Bạn có thể tạo danh mục");
       });
       return false;
     },
-    onRemove() {
-      if (DataSubmit.idPath) {
-        UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {
-          console.log(res);
-        });
+    onRemove(file) {
+      if (file?.uid == selected?.idPath) {
+        return;
+      }
+      if (file && file.uid && selected?.id) {
+        ProductsApi.deleteSubimage({ id: selected.id, idPath: file.uid })
+          .then((res: any) => {
+            message.success(res.message);
+            setData(() => res.data.products);
+          })
+          .catch((res) => {
+            message.success(res.message);
+          });
       }
     },
     onChange({ file, fileList }) {
@@ -231,22 +258,53 @@ const FormComponent = ({
 
         {title === "sản phẩm" && (
           <Form.Item<FieldType>
-            label="Danh mục"
-            name="categoryId"
-            initialValue={selected?.categoryId || null}
-            rules={[
-              { required: true, message: "Danh mục không được để trống!" },
-            ]}
+            label="Giá"
+            name="price"
+            initialValue={selected?.price || 0}
           >
-            <Select placeholder="Hãy chọn danh mục" allowClear>
-              {categories?.map((category) => (
-                <Option value={category.id} key={category.id}>
-                  {category.name}
-                </Option>
-              ))}
-            </Select>
+            <Input type="number" min={0} placeholder="Giá" />
           </Form.Item>
         )}
+
+        <Form.Item<FieldType>
+          label="Danh mục"
+          name="categoryId"
+          initialValue={selected?.Category?.id || ""}
+          rules={[{ required: true, message: "Danh mục không được để trống!" }]}
+        >
+          <Select
+            value={`Chon danh much`}
+            placeholder="Hãy chọn danh mục"
+            allowClear
+          >
+            {Categories.map((category: any) => (
+              <Option value={category.id} key={category.id}>
+                {category.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="* Giảm giá"
+          name="saleoff"
+          initialValue={0}
+        >
+          <Select
+            showSearch
+            optionFilterProp="children"
+            className="saleoff"
+            placeholder="Hãy chọn danh mục"
+            defaultValue={0}
+            options={[
+              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90,
+              100,
+            ].map((item) => ({
+              value: item,
+              label: `${item} %`,
+            }))}
+          />
+        </Form.Item>
 
         {title === "tiêu đề" && (
           <Form.Item<FieldType>
@@ -263,52 +321,47 @@ const FormComponent = ({
             <EditorContent text={text} setText={setText} title="Content" />
           </Form.Item>
         )}
-
-        {title === "hóa đơn" ? (
-          <></>
-        ) : (
-          <>
-            <Form.Item<FieldType>
-              label="Trạng thái"
-              name="visiable"
-              initialValue={
-                selected ? (selected?.visible === true ? true : false) : null
-              }
-              rules={[
-                { required: true, message: "Trạng thái không được để trống!" },
-              ]}
-            >
-              <Select placeholder="Hãy chọn trạng thái" allowClear>
-                <Option value={true}>Hiện</Option>
-                <Option value={false}>Ẩn</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item<FieldType>
-              label="Mô tả"
-              name="description"
-              initialValue={selected?.description || null}
-              rules={[
-                { required: true, message: "Mô tả không được để trống!" },
-              ]}
-            >
-              <TextArea rows={4} placeholder="Nhập mô tả" />
-            </Form.Item>
-            <Form.Item<FieldType>
-              name="imageUrl"
-              label="Hình ảnh"
-              rules={[
-                {
-                  required: DataSubmit?.imageUrl ? false : true,
-                  message: "Hình ảnh không được để trống!",
-                },
-              ]}
-            >
-              <Upload {...props}>
-                <Button>Chọn một hình ảnh</Button>
-              </Upload>
-            </Form.Item>
-          </>
-        )}
+        <Form.Item<FieldType>
+          label="Trạng thái"
+          name="visiable"
+          initialValue={selected ? selected.visiable : true}
+        >
+          <Select
+            placeholder="Hãy chọn trạng thái"
+            defaultValue={selected?.visiable || true}
+            allowClear
+          >
+            <Option value={true}>Hiện</Option>
+            <Option value={false}>Ẩn</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item<FieldType>
+          label="Mô tả"
+          name="description"
+          initialValue={selected?.description || null}
+          rules={[{ required: true, message: "Mô tả không được để trống!" }]}
+        >
+          <TextArea rows={4} placeholder="Nhập mô tả" />
+        </Form.Item>
+        <Form.Item<FieldType>
+          name="imageUrl"
+          label="Hình ảnh"
+          initialValue={selected?.imageUrl || ""}
+          rules={[
+            {
+              required: selected?.imageUrl
+                ? false
+                : listSubImage.length
+                ? false
+                : true,
+              message: "Hình ảnh không được để trống!",
+            },
+          ]}
+        >
+          <Upload {...props}>
+            <Button>Chọn một hoặc nhiều hình ảnh</Button>
+          </Upload>
+        </Form.Item>
 
         <Form.Item wrapperCol={{ span: 23, style: { alignItems: "end" } }}>
           <button

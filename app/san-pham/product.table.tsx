@@ -5,9 +5,9 @@ import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
 
-import CategoriApi from "@/api-client/category";
-import FormComponent from "@/components/Products/FormComponent";
-import ModalComponent from "@/components/Products/ModalComponent";
+import FormComponent from "./FormComponent";
+import ModalComponent from "./ModalComponent";
+import ProductsApi from "@/api-client/product";
 
 const itemPerPage: number = 5;
 
@@ -59,13 +59,13 @@ const ProductTable = ({
 
   const handleDelete = (data: any) => {
     if (data.id) {
-      CategoriApi.delete(data.id)
+      ProductsApi.delete(data.id)
         .then(() => {
-          message.success("Xóa thành công");
+          message.success("Xóa  sản phẩm thành công");
           setData((prev: any[]) => prev.filter((item) => item.id != data.id));
         })
         .catch(() => {
-          message.error("Xóa thất bại");
+          message.error("Xóa sản phẩm thất bại");
         });
     }
   };
@@ -130,7 +130,7 @@ const ProductTable = ({
                   {isShow && (
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white capitalize">
-                        {product.name}
+                        {product?.Category?.name}
                       </p>
                     </td>
                   )}

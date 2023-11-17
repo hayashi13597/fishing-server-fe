@@ -9,7 +9,8 @@ import CategoriApi from "@/api-client/category";
 
 import FormComponent from "./FormComponent";
 import ModalComponent from "./ModalComponent";
-
+import { useDispatch } from "react-redux";
+import { UploadCategory } from "@/redux/category/CategorySlicer";
 const itemPerPage: number = 5;
 
 type TableThreeType = {
@@ -30,7 +31,7 @@ const CateGoriTable = ({
   const [isAdd, setIsAdd] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selected, setSelected] = useState(null);
-
+  const dispatch = useDispatch();
   const showModal = (product: any) => {
     setIsModalOpen(true);
     setSelected(product);
@@ -63,7 +64,11 @@ const CateGoriTable = ({
       CategoriApi.delete(data.id)
         .then(() => {
           message.success("Xóa thành công");
-          setData((prev: any[]) => prev.filter((item) => item.id != data.id));
+          setData((prev: any[]) => {
+            const listcate = prev.filter((item) => item.id != data.id);
+            dispatch(UploadCategory(listcate));
+            return listcate;
+          });
         })
         .catch(() => {
           message.error("Xóa thất bại");

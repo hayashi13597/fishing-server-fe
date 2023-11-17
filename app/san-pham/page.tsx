@@ -1,12 +1,19 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 import productsss from "@/mock/products.json";
 import ProductTable from "./product.table";
+import ProductsApi from "@/api-client/product";
 
 const Products = () => {
   const [products, setListProduct] = useState(productsss);
+  useEffect(() => {
+    ProductsApi.getAll().then((res) => {
+      setListProduct(res.data.products);
+    });
+  }, []);
+
   return (
     <>
       <Breadcrumb pageName="Sản phẩm" />

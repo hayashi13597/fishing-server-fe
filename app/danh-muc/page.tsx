@@ -10,10 +10,9 @@ import CateGoriTable from "./category.table";
 const Category = () => {
   const listCate = useSelector((state: RootState) => state.cate.listCate);
   const [listCategories, setCategories] = useState([]);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     setCategories(listCate);
-    dispatch(UploadCategory(listCate));
   }, [listCate.length]);
   return (
     <>

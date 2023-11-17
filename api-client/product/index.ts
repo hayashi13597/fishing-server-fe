@@ -3,29 +3,32 @@ const ProductsApi = {
   path: "/product/",
 
   getAll() {
-    return apiClient.get(this.path);
+    return apiClient.get(this.path + "admin");
   },
   getOne(slug: string) {
     return apiClient.get(this.path + slug);
   },
   add(data: {
-    user_id: string;
-    category_id: string;
-    price?: number;
+    category_id: number;
+    user_id: number;
+    idPath: string;
+    price: number;
     name: string;
-    desctiption: string;
-    seffoff: 0;
+    imageUrl: string;
+    listSubimages: string;
+    description: string;
+    selloff: number;
   }) {
-    return apiClient.get(this.path, { data });
+    return apiClient.post(this.path, { data });
   },
   // someFeildProduct ví dụ muốn sửa một số trường thì truyền  {description:"dsadsadsa",name:"dsadsdsa"} có trong product là dc
-  edit(data: { id: string; someFeildProduct: any }) {
+  edit(data: any) {
     return apiClient.put(this.path, {
-      data: {
-        id: data.id,
-        ...data.someFeildProduct,
-      },
+      data,
     });
+  },
+  deleteSubimage(data: { id: string; idPath: string }) {
+    return apiClient.post(this.path + "updatesubimage", { data });
   },
   delete(id: string) {
     return apiClient.delete(this.path + id);

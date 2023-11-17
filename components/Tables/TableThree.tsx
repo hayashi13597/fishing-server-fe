@@ -14,7 +14,7 @@ type TableThreeType = {
   title?: string;
   data?: any;
   isShow?: boolean;
-  setData: any;
+  setData?: any;
 };
 
 const TableThree = ({

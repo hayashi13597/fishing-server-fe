@@ -5,6 +5,8 @@ import type { UploadProps } from "antd";
 import EditorContent from "./EditorContent";
 import UploadImageApi from "@/api-client/uploadfile";
 import CategoriApi from "@/api-client/category";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -53,10 +55,11 @@ const FormComponent = ({
 }: FormComponentType) => {
   const [form] = Form.useForm();
   const [text, setText] = useState("");
+  const account = useSelector((state: RootState) => state.account.account);
   const initData = {
     imageUrl: selected?.imageUrl || "",
     idPath: selected?.idPath || "",
-    user_id: 2,
+    user_id: account.id,
     name: selected?.name || "",
     description: selected?.description || "",
     visiable: true,
@@ -75,7 +78,7 @@ const FormComponent = ({
       const dataUpload: any = {
         imageUrl: DataSubmit.imageUrl,
         idPath: DataSubmit.idPath,
-        user_id: 2,
+        user_id: account.id,
         name,
         description,
         visiable,
@@ -98,7 +101,7 @@ const FormComponent = ({
       const dataUpload = {
         imageUrl: DataSubmit.imageUrl || selected.imageUrl,
         idPath: DataSubmit.idPath || selected.idPath,
-        user_id: 2,
+        user_id: account.id,
         name,
         description,
         visiable,

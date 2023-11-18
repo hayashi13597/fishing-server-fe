@@ -10,7 +10,7 @@ type ModalType = {
 };
 
 const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
-  const { name, price, imageUrl, User, createdAt, visible, description } =
+  const { name, price, imageUrl, isEvent, createdAt, visiable, description } =
     selected;
 
   return (
@@ -39,7 +39,10 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
             />
           </div>
           <div className="w-2/3">
-            <h3 className="font-semibold text-xl">{name}</h3>
+            <h3 className="font-semibold text-xl">
+              {isEvent ? "Sự kiện " : "Tin tức "}
+              {name}
+            </h3>
             <p className="mt-1 md:mt-3 font-medium text-lg text-meta-1">
               {formatMoney(price)}
             </p>
@@ -49,9 +52,10 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
               Ngày đăng: <br className="block md:hidden" />{" "}
               <span className="font-semibold">{formatDateTime(createdAt)}</span>
             </p>
+
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Trạng thái:{" "}
-              <span className="font-semibold"> {visible ? "Hiện" : "Ẩn"}</span>
+              <span className="font-semibold"> {visiable ? "Hiện" : "Ẩn"}</span>
             </p>
           </div>
         </div>

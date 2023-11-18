@@ -6,9 +6,9 @@ const initState = {
   visiable: false,
   role: "admin",
   uid: "",
-  id: 4,
+  id: 1,
   email: "admin@gmail.com",
-  fullname: "Admin",
+  fullname: "Phạm Hoài Nam ",
   accessToken:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTcwMDIwMDc3NywiZXhwIjoxNzAwNDU5OTc3fQ.n8dQm0u4DIAUbJTgEleeuA2PPsfznZow2fgs_D9_PT0",
 };

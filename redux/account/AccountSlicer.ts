@@ -23,7 +23,6 @@ const initialState: IAccount = {
   avatar: "/assets/avatar.png",
   email: "",
   phone: "",
-
   address: "",
   role: "member",
   accessToken: "",

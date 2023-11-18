@@ -7,8 +7,9 @@ const initState = {
   role: "admin",
   uid: "",
   id: 1,
-  email: "admin11ss23@gmail.com",
-  fullname: "Test 1",
+  email: "admin@gmail.com",
+  fullname: "Phạm Hoài Nam ",
+
   accessToken:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTFzczIzQGdtYWlsLmNvbSIsImlhdCI6MTcwMDI0ODA0NiwiZXhwIjoxNzAwNTA3MjQ2fQ.nvn8aTVOu1CMk8QDjgwcMfTzd5RJ9tjVG2WyGtHuPCs",
   refreshToken:

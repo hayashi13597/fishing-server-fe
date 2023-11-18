@@ -1,33 +1,73 @@
-import { createSlice } from "@reduxjs/toolkit";
-const initState = {
-  avatar: "https://i.imgur.com/iOTWGLo.png",
-  address: "",
+import UserApi from "@/api-client/user";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { handleAttachToken } from "../../api-client";
+export interface IAccount {
+  id: string;
+  username: string;
+  fullname: string;
+  avatar: string;
+  email: string;
+  address: string;
+  phone: string;
+  accessToken: string;
+  visiable: boolean;
+  uid: string | null;
+  created_at: string;
+  updated_at: string;
+  role: string;
+}
+const initialState: IAccount = {
+  id: "",
+  username: "",
+  fullname: "",
+  avatar: "/assets/avatar.png",
+  email: "",
   phone: "",
-  visiable: true,
-  role: "admin",
-  uid: "",
-  id: 1,
-  email: "admin@gmail.com",
-  fullname: "Phạm Hoài Nam ",
 
-  accessToken:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTFzczIzQGdtYWlsLmNvbSIsImlhdCI6MTcwMDI0ODA0NiwiZXhwIjoxNzAwNTA3MjQ2fQ.nvn8aTVOu1CMk8QDjgwcMfTzd5RJ9tjVG2WyGtHuPCs",
-  refreshToken:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMTFzczIzQGdtYWlsLmNvbSIsImlhdCI6MTcwMDI0ODA0NiwiZXhwIjoxNzAxMTEyMDQ2fQ.ewLCyiXMQ7x493sL3w6SpcWDShUx6A6qwrP9LcenR4w",
+  address: "",
+  role: "member",
+  accessToken: "",
+  visiable: false,
+  uid: null,
+  created_at: "",
+  updated_at: "",
 };
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
-    account: initState,
+    account: initialState,
   },
   reducers: {
     UpdateAccount(state, action) {
       state.account = action.payload;
     },
     LogoutAccount(state) {
-      state.account = initState;
+      state.account = initialState;
+      handleAttachToken("");
     },
   },
+  extraReducers(builder) {
+    builder.addCase(FetchFirstLoginWithToken.fulfilled, (state, action) => {
+      console.log(action.payload.account);
+      state.account = action.payload.account;
+    });
+  },
 });
-export const { UpdateAccount } = AccountSlice.actions;
+export const FetchFirstLoginWithToken = createAsyncThunk(
+  "users/loginWithToken",
+  async () => {
+    const res = await UserApi.loginFast();
+
+    if (res) {
+      const account: IAccount = res.data.account;
+
+      handleAttachToken(account.accessToken);
+      return { account };
+    } else {
+      return Promise.reject("dont have token");
+    }
+  }
+);
+
+export const { UpdateAccount, LogoutAccount } = AccountSlice.actions;
 export default AccountSlice.reducer;

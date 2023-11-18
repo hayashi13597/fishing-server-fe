@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { LogoutAccount } from "@/redux/account/AccountSlicer";
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const dispatch = useDispatch();
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
   const account = useSelector((state: RootState) => state.account.account);
@@ -34,7 +35,10 @@ const DropdownUser = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
-
+  const handleLogout = () => {
+    dispatch(LogoutAccount());
+    window.location.reload();
+  };
   return (
     <div className="relative">
       <Link
@@ -86,7 +90,10 @@ const DropdownUser = () => {
           dropdownOpen === true ? "block" : "hidden"
         }`}
       >
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        >
           <svg
             className="fill-current"
             width="22"

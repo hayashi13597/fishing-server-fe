@@ -56,6 +56,7 @@ const FormComponent = ({
   const [form] = Form.useForm();
   const [text, setText] = useState("");
   const account = useSelector((state: RootState) => state.account.account);
+
   const initData = {
     imageUrl: selected?.imageUrl || "",
     idPath: selected?.idPath || "",
@@ -78,7 +79,7 @@ const FormComponent = ({
       const dataUpload: any = {
         imageUrl: DataSubmit.imageUrl,
         idPath: DataSubmit.idPath,
-        user_id: 2,
+        user_id: account.id,
         name,
         description,
         visiable,
@@ -105,7 +106,7 @@ const FormComponent = ({
       const dataUpload = {
         imageUrl: DataSubmit.imageUrl || selected.imageUrl,
         idPath: DataSubmit.idPath || selected.idPath,
-        user_id: 2,
+        user_id: account.id,
         name,
         description,
         visiable,
@@ -127,8 +128,8 @@ const FormComponent = ({
           message.success(res.message);
           closeModal && closeModal();
         })
-        .catch(({ message }) => {
-          message.error(message);
+        .catch((res) => {
+          message.error(res.message);
         });
     }
   };
@@ -272,7 +273,7 @@ const FormComponent = ({
               label="Trạng thái"
               name="visiable"
               initialValue={
-                selected ? (selected?.visible === true ? true : false) : null
+                selected ? (selected?.visible === true ? true : false) : true
               }
               rules={[
                 { required: true, message: "Trạng thái không được để trống!" },

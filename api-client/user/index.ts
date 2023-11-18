@@ -2,6 +2,14 @@ import apiClient from "..";
 
 class UserApi {
   path = "/user/";
+  login(data: { email: string; password: string }) {
+    return apiClient.post(this.path + "adminlogin", {
+      data,
+    });
+  }
+  loginFast() {
+    return apiClient.post(this.path + "adminloginfast");
+  }
   GetAll() {
     return apiClient.get(this.path);
   }

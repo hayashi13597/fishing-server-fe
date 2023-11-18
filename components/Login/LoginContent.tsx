@@ -43,7 +43,7 @@ const LoginContent = () => {
   });
 
   return (
-    <div className="m-auto w-[400px] ">
+    <div className="fixed inset-0  z-99999">
       <div className="rounded-sm h-screen border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">

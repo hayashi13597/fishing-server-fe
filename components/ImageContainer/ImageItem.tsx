@@ -72,7 +72,7 @@ const ImageItem: React.FC<{
     <div ref={divRef} className="border p-4 relative">
       <button
         onClick={handleHideBox}
-        className="absolute -top-3 -right-3 bg-red-500  hover:bg-red-700 rounded-full border px-3"
+        className="absolute -top-3 -right-3 bg-primary  hover:opacity-75 text-white rounded-full border px-3"
         type="button"
       >
         X
@@ -87,11 +87,11 @@ const ImageItem: React.FC<{
       <p className="mt-2 cursor-pointe  text-sm  flex flex-col i">
         <span>Link ảnh:</span>
         <button
-          onClick={() => handleCopy(1)}
+          onClick={() => handleCopy(2)}
           type="button"
           className="py-2 px-3 cursor-pointer sm:w-32 mt-2 text-sm rounded-full bg-yellow-600 hover:bg-yellow-800"
         >
-          Copy Link
+          Sao chép
         </button>
       </p>
       {/* <p className="mt-4 cursor-pointer text-sm flex flex-col">
@@ -117,7 +117,6 @@ const ImageItem: React.FC<{
       </p>
       {path && (
         <p className="mt-4 cursor-pointer text-sm flex justify-center flex-col">
-          <span> Nhớ xóa nếu không sử dụng nhé!</span>
           <button
             type="button"
             onClick={handleDeleteUpLoadImage}

@@ -67,7 +67,7 @@ const FormComponent = ({
 
   const onFinish = (values: any) => {
     if (!text) {
-      message.error("Vui lòng điền nội dung");
+      return message.error("Vui lòng điền nội dung");
     }
     const { title, description, visiable, isEvent, time_end } = values;
     const dataUpload: any = {
@@ -223,21 +223,14 @@ const FormComponent = ({
           label="Thời gian sự kiện:"
           name="time_end"
         >
-          <input
-            type="date"
-            className="w-full border border-graydark p-2 rounded-full "
-            value={
-              selected?.time_end
-                ? moment(selected.time_end).format("YYYY-MM-DD")
-                : ""
-            }
-            name="time_end"
+          <Input type="date" />
+        </Form.Item>
+        <Form.Item label="Danh sách ảnh">
+          <ImageContainer
+            listImage={listImageContent}
+            setListImage={setListImageContent}
           />
         </Form.Item>
-        <ImageContainer
-          listImage={listImageContent}
-          setListImage={setListImageContent}
-        />
         <Form.Item<FieldType> label="Nội dung" name="content">
           <EditorContent
             text={text || selected?.content}

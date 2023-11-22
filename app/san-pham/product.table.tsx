@@ -151,7 +151,7 @@ const ProductTable = ({
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div
-                      className={`flex items-center justify-between ${
+                      className={`flex items-center justify-center ${
                         title == "sản phẩm" ? "gap-3" : ""
                       }`}
                     >

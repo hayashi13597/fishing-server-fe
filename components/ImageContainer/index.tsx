@@ -52,15 +52,14 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
       <button
         type="button"
         onClick={() => setIsHidden(!isHidden)}
-        className="bg-secondary hover:bg-primary hover:text-white py-2 px-5 rounded-full m-2 absolute top-1 right-1 z-50"
+        className="bg-primary text-white transition-all hover:opacity-75 py-2 px-5 rounded-full m-2 absolute top-1 right-1 z-50"
       >
         {isHidden ? "Hiện" : "Ẩn"}
       </button>
       <section className={cn(isHidden ? "hidden" : "", "border")}>
-        <h1 className="text-center text-lg ">Danh sách ảnh cần sử dụng</h1>
         <div className="flex my-8 ">
           <label
-            htmlFor="uploadcontentimage"
+            htmlFor="uploadContentImage"
             className="m-auto w-32 h-32w-32 p-4 border-dashed  border text-center cursor-pointer "
           >
             Tải ảnh lên
@@ -68,7 +67,7 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
         </div>
         <input
           onChange={handleUpload}
-          id="uploadcontentimage"
+          id="uploadContentImage"
           type="file"
           className="!hidden"
         />

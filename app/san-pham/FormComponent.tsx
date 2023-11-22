@@ -273,6 +273,7 @@ const FormComponent = ({
           <Form.Item<FieldType>
             label="Giá"
             name="price"
+            rules={[{ required: true, message: "Giá không được để trống!" }]}
             initialValue={selected?.price || 0}
           >
             <Input type="number" min={0} placeholder="Giá" />
@@ -299,15 +300,16 @@ const FormComponent = ({
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="* Giảm giá"
+          label="Giảm giá"
           name="saleoff"
           initialValue={0}
+          rules={[{ required: true, message: "Giả giá không được để trống!" }]}
         >
           <Select
             showSearch
             optionFilterProp="children"
             className="saleoff"
-            placeholder="Hãy chọn danh mục"
+            placeholder="Hãy chọn giảm giá"
             defaultValue={0}
             options={[
               0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90,
@@ -326,11 +328,9 @@ const FormComponent = ({
         >
           <TextArea rows={2} placeholder="Nhập mô tả seo" />
         </Form.Item>
-        <ImageContainer
-          listImage={listImageContent}
-          setListImage={setListImageContent}
-        />
-        <EditorContent text={text} setText={setText} title="content" />
+        <Form.Item label="Thông tin sản phảm">
+          <EditorContent text={text} setText={setText} title="content" />
+        </Form.Item>
         <Form.Item<FieldType>
           label="Trạng thái"
           name="visiable"

@@ -32,9 +32,9 @@ const CateGoriTable = ({
   const [isEdit, setIsEdit] = useState(false);
   const [selected, setSelected] = useState(null);
   const dispatch = useDispatch();
-  const showModal = (product: any) => {
+  const showModal = (category: any) => {
     setIsModalOpen(true);
-    setSelected(product);
+    setSelected(category);
   };
 
   const closeModal = () => {
@@ -115,56 +115,56 @@ const CateGoriTable = ({
                 (pageCurrent - 1) * itemPerPage,
                 pageCurrent * itemPerPage
               )
-              .map((product: any, key: any) => (
+              .map((category: any, key: any) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11 flex items-center gap-2">
                     <div className="h-12.5 w-15 rounded-md hidden md:block">
                       <Image
-                        src={product.imageUrl}
+                        src={category.imageUrl}
                         width={60}
                         height={50}
-                        alt={product.name}
+                        alt={category.name}
                       />
                     </div>
                     <div className="">
                       <h5 className="font-medium text-black dark:text-white capitalize">
-                        {product.name}
+                        {category.name}
                       </h5>
-                      <p className="text-sm">{formatMoney(product.price)}</p>
+                      <p className="text-sm">{formatMoney(category.price)}</p>
                     </div>
                   </td>
                   {isShow && (
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white capitalize">
-                        {product.name}
+                        {category.name}
                       </p>
                     </td>
                   )}
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {formatDateTime(product.createdAt)}
+                      {formatDateTime(category.createdAt)}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                        product.visiable
+                        category.visiable
                           ? "text-success bg-success"
                           : "text-danger bg-danger"
                       }`}
                     >
-                      {product.visiable ? "Hiện" : "Ẩn"}
+                      {category.visiable ? "Hiện" : "Ẩn"}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div
-                      className={`flex items-center justify-between ${
-                        title == "sản phẩm" ? "gap-3" : ""
+                      className={`flex items-center justify-center ${
+                        title == "danh mục" ? "gap-3" : ""
                       }`}
                     >
                       <button
                         className="hover:text-primary"
-                        onClick={() => showModal(product)}
+                        onClick={() => showModal(category)}
                       >
                         <svg
                           className="fill-current"
@@ -186,13 +186,13 @@ const CateGoriTable = ({
                       </button>
                       <button
                         className="hover:text-primary text-xl"
-                        onClick={() => showEditForm(product)}
+                        onClick={() => showEditForm(category)}
                       >
                         <CiEdit />
                       </button>
                       <Popconfirm
                         title="Bạn có chắc muốn xóa không?"
-                        onConfirm={() => handleDelete(product)}
+                        onConfirm={() => handleDelete(category)}
                         okText="Xác nhận"
                         cancelText="Hủy"
                         okType="danger"

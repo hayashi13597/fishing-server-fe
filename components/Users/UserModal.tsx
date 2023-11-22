@@ -14,15 +14,15 @@ const UserModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
     email,
 
     fullname,
-    visible,
+    visiable,
     role,
     avatar,
     createdAt,
     address,
     phone,
   } = selected;
-  selected;
 
+  console.log(selected);
   return (
     <>
       <Modal
@@ -70,10 +70,10 @@ const UserModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
               Trạng thái:{" "}
               <span
                 className={`inline-flex rounded-full bg-opacity-10 py-1 px-2 text-sm font-medium ${
-                  visible ? "text-success bg-success" : "text-danger bg-danger"
+                  visiable ? "text-success bg-success" : "text-danger bg-danger"
                 }`}
               >
-                {visible ? "Hoạt động" : "Khóa"}
+                {visiable ? "Hoạt động" : "Khóa"}
               </span>
             </p>
 

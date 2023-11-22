@@ -40,9 +40,7 @@ const nextConfig = {
       },
     ];
   },
-  experimental: {
-    serverActions: true,
-  },
+
   env: {
     DOMAIN_SERVER: process.env.DOMAIN_SERVER,
   },

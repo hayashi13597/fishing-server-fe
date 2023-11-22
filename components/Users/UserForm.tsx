@@ -121,7 +121,7 @@ const UserForm = ({
           label="Trạng thái"
           name="visible"
           initialValue={
-            selected ? (selected?.visible === true ? true : false) : null
+            selected ? (selected?.visiable === true ? true : false) : true
           }
           rules={[
             { required: true, message: "Trạng thái không được để trống!" },

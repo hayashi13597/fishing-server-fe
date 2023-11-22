@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/Products/EditorContent.jsx"
+    "components/Products/EditorContent.tsx"
   ],
   "exclude": ["node_modules"]
 }

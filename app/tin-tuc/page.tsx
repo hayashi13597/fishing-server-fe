@@ -16,11 +16,7 @@ const NewsAndEvents = () => {
     <>
       <Breadcrumb pageName="Tin tức - Sự kiện" />
       <div className="flex flex-col gap-10">
-        <Table
-          setData={setListNews}
-          title="tin tức - sự kiện"
-          data={ListNews}
-        />
+        <Table setData={setListNews} title="tin tức" data={ListNews} />
       </div>
     </>
   );

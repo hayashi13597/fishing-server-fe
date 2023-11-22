@@ -18,6 +18,7 @@ const ProductsApi = {
     listSubimages: string;
     description: string;
     selloff: number;
+    content: string;
   }) {
     return apiClient.post(this.path, { data });
   },

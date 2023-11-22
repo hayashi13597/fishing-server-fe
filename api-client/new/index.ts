@@ -21,6 +21,7 @@ class NewApi {
     content: string;
     idPath: string;
     isEvent: boolean;
+    time_end: string;
   }) {
     return apiClient.post(this.path, {
       data,

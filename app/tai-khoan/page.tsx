@@ -12,7 +12,6 @@ const UserAccount = () => {
       setListAccount(() => res.data.accounts);
     });
   }, []);
-  console.log(listAfccount);
   return (
     <>
       <Breadcrumb pageName="Tài khoản" />

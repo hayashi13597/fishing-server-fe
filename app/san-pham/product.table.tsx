@@ -50,7 +50,6 @@ const ProductTable = ({
   const showEditForm = (product: any) => {
     setIsEdit(true);
     setSelected(product);
-    console.log(product);
   };
 
   const closeEditFrom = () => {

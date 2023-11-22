@@ -6,6 +6,7 @@ import { Pagination, Popconfirm, message } from "antd";
 import NewApi from "@/api-client/new";
 import NewsModal from "./NewsModal";
 import FormComponent from "./FormComponent";
+import { HandleTimeDiff } from "@/utils";
 
 const itemPerPage: number = 5;
 
@@ -91,7 +92,7 @@ const Table = ({ title, data, isShow = true, setData }: TableThreeType) => {
                 Trạng thái
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Ngày còn lại
+                Loại
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                 Tác vụ
@@ -146,7 +147,7 @@ const Table = ({ title, data, isShow = true, setData }: TableThreeType) => {
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {item.timeEvent} ngày
+                      {item.isEvent ? "Sự kiện" : "Tin tức"}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">

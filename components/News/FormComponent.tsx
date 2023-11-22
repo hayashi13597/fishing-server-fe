@@ -4,10 +4,12 @@ import type { UploadProps } from "antd";
 
 import UploadImageApi from "@/api-client/uploadfile";
 
-import EditorContent from "../Products/EditorContent";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import NewApi from "@/api-client/new";
+import moment from "moment";
+import EditorContent from "@/app/san-pham/EditorContent";
+import ImageContainer from "../ImageContainer";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -21,7 +23,7 @@ type FieldType = {
   updatedAt?: Date;
   visiable?: boolean;
   isEvent?: boolean;
-  timeEvent?: number;
+  time_end?: number;
   content?: any;
   title?: string;
   id?: number;
@@ -54,8 +56,9 @@ const FormComponent = ({
   setData,
 }: FormComponentType) => {
   const [form] = Form.useForm();
-  const [text, setText] = useState("");
+  const [text, setText] = useState(selected?.content || "");
   const account = useSelector((state: RootState) => state.account.account);
+  const [listImageContent, setListImageContent] = useState([]);
   const initData = {
     imageUrl: selected?.imageUrl || "",
     idPath: selected?.idPath || "",
@@ -63,13 +66,16 @@ const FormComponent = ({
   const [DataSubmit, setDataSubmit] = useState(initData);
 
   const onFinish = (values: any) => {
-    const { title, description, visiable, isEvent, timeEvent } = values;
+    if (!text) {
+      message.error("Vui lòng điền nội dung");
+    }
+    const { title, description, visiable, isEvent, time_end } = values;
     const dataUpload: any = {
       title,
       description,
       visiable,
       isEvent,
-      timeEvent,
+      time_end: time_end ? new Date(time_end).toISOString() : "",
       content: text,
       imageUrl: DataSubmit.imageUrl || selected?.imageUrl,
       idPath: DataSubmit.idPath || selected?.idPath,
@@ -167,7 +173,7 @@ const FormComponent = ({
       authorization: "Token",
     },
   };
-
+  console.log(selected);
   return (
     <Modal
       title={`${type === "add" ? "Thêm" : "Sửa"} ${title}`}
@@ -189,12 +195,12 @@ const FormComponent = ({
         className="mt-5"
       >
         <Form.Item<FieldType>
-          label={`Tiêu đề ${title}`}
+          label={`Tin tức`}
           name="title"
           rules={[{ required: true, message: "Tiêu đề không được để trống!" }]}
           initialValue={selected?.title || ""}
         >
-          <Input placeholder={`Nhập Tiêu đề ${title}`} />
+          <Input placeholder={`Nhập Tin tức`} />
         </Form.Item>
         <Form.Item<FieldType>
           label="Loại tin"
@@ -207,19 +213,31 @@ const FormComponent = ({
             <Option value={false}>Tin tức</Option>
           </Select>
         </Form.Item>
+
         <Form.Item<FieldType>
-          label="Tổng ngày sự kiện"
-          name="timeEvent"
-          initialValue={selected?.timeEvent || 0}
-          rules={[
-            {
-              required: true,
-              message: "Tổng ngày sự kiện không được để trống!",
-            },
-          ]}
+          initialValue={
+            selected?.time_end
+              ? moment(selected.time_end).format("YYYY-MM-DD")
+              : ""
+          }
+          label="Thời gian sự kiện:"
+          name="time_end"
         >
-          <Input type="number" min={0} placeholder="Nhập số ngày" />
+          <input
+            type="date"
+            className="w-full border border-graydark p-2 rounded-full "
+            value={
+              selected?.time_end
+                ? moment(selected.time_end).format("YYYY-MM-DD")
+                : ""
+            }
+            name="time_end"
+          />
         </Form.Item>
+        <ImageContainer
+          listImage={listImageContent}
+          setListImage={setListImageContent}
+        />
         <Form.Item<FieldType> label="Nội dung" name="content">
           <EditorContent
             text={text || selected?.content}

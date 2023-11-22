@@ -1,14 +1,14 @@
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { Button, Form, Input, Modal, Select, Upload, message } from "antd";
-import categories from "@/mock/categories.json";
 import type { UploadProps } from "antd";
 
 import UploadImageApi from "@/api-client/uploadfile";
-import CategoriApi from "@/api-client/category";
-import EditorContent from "@/components/Products/EditorContent";
+
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import ProductsApi from "@/api-client/product";
+import ImageContainer from "@/components/ImageContainer";
+import EditorContent from "./EditorContent";
 const { Option } = Select;
 const { TextArea } = Input;
 interface ListImageUrl {
@@ -59,9 +59,11 @@ const FormComponent = ({
   setData,
 }: FormComponentType) => {
   const [form] = Form.useForm();
-  const [text, setText] = useState("");
+  const [text, setText] = useState(selected?.content || "");
+  console.log("selected?.content ", selected?.content);
   const account = useSelector((state: RootState) => state.account.account);
   let listImageRender: any[] = [];
+
   try {
     listImageRender = JSON.parse(selected?.listSubimages || []) || [];
 
@@ -76,6 +78,9 @@ const FormComponent = ({
   );
   const Categories = useSelector((state: RootState) => state.cate.listCate);
   const onFinish = (values: any) => {
+    if (!text) {
+      message.error("Vui lòng điền nội dung");
+    }
     const {
       categoryId,
       description,
@@ -107,6 +112,7 @@ const FormComponent = ({
         saleoff,
         visiable,
         listSubimages: JSON.stringify(listSubImage),
+        content: text,
       };
 
       ProductsApi.add(DataUpload)
@@ -115,9 +121,10 @@ const FormComponent = ({
           setData((prev: any[]) => [res.data.product, ...prev]);
           setListSubImage([]);
           closeModal && closeModal();
+          setText("");
         })
         .catch((res) => {
-          message.error(res.message);
+          message.error(res?.message);
         });
     } else {
       if (!selected?.id) {
@@ -133,6 +140,7 @@ const FormComponent = ({
         imageUrl: selected?.imageUrl,
         idPath: selected?.idPath,
         id: selected?.id,
+        content: text,
       };
       if (listSubImage.length) {
         dataEdit.listSubImage = JSON.stringify(
@@ -144,6 +152,7 @@ const FormComponent = ({
           message.success(res.message);
           setData(() => res.data.products);
           setListSubImage([]);
+          setText("");
           closeModal && closeModal();
         })
         .catch((res) => {
@@ -213,6 +222,10 @@ const FormComponent = ({
       authorization: "Token",
     },
   };
+  const [listImageContent, setListImageContent] = useState([]);
+  console.log("========================================");
+
+  console.log(text);
 
   return (
     <Modal
@@ -305,22 +318,19 @@ const FormComponent = ({
             }))}
           />
         </Form.Item>
-
-        {title === "tiêu đề" && (
-          <Form.Item<FieldType>
-            label="Nội dung"
-            name="content"
-            initialValue={selected?.content || text}
-            rules={[
-              {
-                required: true,
-                message: "Nội dung không được để trống!",
-              },
-            ]}
-          >
-            <EditorContent text={text} setText={setText} title="Content" />
-          </Form.Item>
-        )}
+        <Form.Item<FieldType>
+          label="Mô tả"
+          name="description"
+          initialValue={selected?.description || null}
+          rules={[{ required: true, message: "Mô tả không được để trống!" }]}
+        >
+          <TextArea rows={2} placeholder="Nhập mô tả seo" />
+        </Form.Item>
+        <ImageContainer
+          listImage={listImageContent}
+          setListImage={setListImageContent}
+        />
+        <EditorContent text={text} setText={setText} title="content" />
         <Form.Item<FieldType>
           label="Trạng thái"
           name="visiable"
@@ -335,14 +345,7 @@ const FormComponent = ({
             <Option value={false}>Ẩn</Option>
           </Select>
         </Form.Item>
-        <Form.Item<FieldType>
-          label="Mô tả"
-          name="description"
-          initialValue={selected?.description || null}
-          rules={[{ required: true, message: "Mô tả không được để trống!" }]}
-        >
-          <TextArea rows={4} placeholder="Nhập mô tả" />
-        </Form.Item>
+
         <Form.Item<FieldType>
           name="imageUrl"
           label="Hình ảnh"

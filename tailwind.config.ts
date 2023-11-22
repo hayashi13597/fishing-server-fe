@@ -1,5 +1,11 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
-
+/** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
+delete colors["lightBlue"];
+delete colors["warmGray"];
+delete colors["trueGray"];
+delete colors["coolGray"];
+delete colors["blueGray"];
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -13,6 +19,7 @@ module.exports = {
       satoshi: ["sans-serif"],
     },
     colors: {
+      ...colors,
       current: "currentColor",
       transparent: "transparent",
       white: "#FFFFFF",

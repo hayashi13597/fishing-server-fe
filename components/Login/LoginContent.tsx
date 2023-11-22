@@ -39,7 +39,7 @@ const LoginContent = () => {
           router.push("/");
         })
         .catch((res) => {
-          message.error(res.message);
+          message.error(res?.message || "Thất bại");
         });
     },
   });
@@ -192,7 +192,7 @@ const LoginContent = () => {
                 Quản trị hệ thống
               </h2>
 
-              <form onSubmit={formik.handleSubmit}>
+              <form method="post" onSubmit={formik.handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email

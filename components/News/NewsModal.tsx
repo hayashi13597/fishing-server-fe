@@ -13,12 +13,12 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
   const {
     title,
     imageUrl,
-    content,
+    time_end,
     createdAt,
     visible,
     description,
     isEvent,
-    timeEvent,
+    content,
     User,
     visiable,
   } = selected;
@@ -58,9 +58,10 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
             <h3 className="mt-1 md:mt-3">
               <span className="font-medium">Người đăng:</span> {User?.fullname}
             </h3>
-            <p className="mt-1 md:mt-3 line-clamp-3">
-              <span className="font-medium">Mô tả:</span> {description}
-            </p>
+            <div className="mt-1 md:mt-3 line-clamp-3 flex gap-2">
+              <span className="font-medium">Nội dung:</span>{" "}
+              <div dangerouslySetInnerHTML={{ __html: content }}></div>
+            </div>
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               <span className="font-medium mr-1">Ngày đăng:</span>{" "}
               <br className="block md:hidden" /> {formatDateTime(createdAt)}

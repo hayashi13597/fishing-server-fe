@@ -4,6 +4,11 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
+interface EditorContentProps {
+  text: string;
+  setText: (value: string) => void;
+  title: string;
+}
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
   ["blockquote", "code-block"],
@@ -23,35 +28,18 @@ const toolbarOptions = [
 
   ["clean"], // remove formatting button
 ];
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-];
 const moduleOptions = {
   toolbar: {
     container: toolbarOptions,
   },
-  clipboard: {
-    // toggle to add extra line breaks when pasting HTML:
-    matchVisual: false,
-  },
 };
-interface EditorContentProps {
-  text: string;
-  setText: (value: string) => any;
-  title: string;
-}
-const EditorContent = ({ text, setText, title }: EditorContentProps) => {
-  let covertText = text;
 
+const EditorContent: React.FC<EditorContentProps> = ({
+  text,
+  setText,
+  title,
+}) => {
+  let covertText = text;
   const handleChange = (value: string) => {
     let newvalue = value;
     if (newvalue) {
@@ -74,28 +62,17 @@ const EditorContent = ({ text, setText, title }: EditorContentProps) => {
 
     setText(newvalue);
   };
-  // if (covertText && covertText.includes("display: none !important;")) {
-  //   covertText = covertText.replace(/style\s*=\s*["'][^"']*["']/g, "");
-  // }
-  console.log(
-    "==============================================covertText=========================================================="
-  );
-  console.log(covertText);
-  console.log(
-    "==============================================text=========================================================="
-  );
-  console.log(text);
+  if (covertText && covertText.includes("display: none !important;")) {
+    covertText = covertText.replace(/style\s*=\s*["'][^"']*["']/g, "");
+  }
 
   return (
-    <div>
-      <ReactQuill
-        theme="snow"
-        modules={moduleOptions}
-        onChange={handleChange}
-        value={text}
-        formats={formats}
-      />
-    </div>
+    <ReactQuill
+      theme="snow"
+      value={covertText}
+      modules={moduleOptions}
+      onChange={handleChange}
+    />
   );
 };
 

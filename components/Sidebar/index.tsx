@@ -312,7 +312,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   <div className="text-2xl">
                     <FaRegComment />
                   </div>
-                  Bình luận
+                  Đánh giá
                 </Link>
               </li>
               {/* <!-- Comments --> */}

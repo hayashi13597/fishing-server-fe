@@ -71,7 +71,6 @@ const FormComponent = ({
     // chưa có login nên user_id default=2
     if (type == "add") {
       const { name, description, visiable = true } = values;
-      console.log("DataSubmit", DataSubmit);
       if (!name || !description || !DataSubmit.imageUrl) {
         message.error("Thêm thất bại");
         return;
@@ -172,9 +171,7 @@ const FormComponent = ({
     },
     onRemove() {
       if (DataSubmit.idPath) {
-        UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {
-          console.log(res);
-        });
+        UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {});
       }
     },
     onChange({ file, fileList }) {
@@ -261,7 +258,12 @@ const FormComponent = ({
               },
             ]}
           >
-            <EditorContent text={text} setText={setText} title="Content" />
+            <EditorContent
+              key={selected?.id || "asdsad"}
+              text={text}
+              setText={setText}
+              title="Content"
+            />
           </Form.Item>
         )}
 

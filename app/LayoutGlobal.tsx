@@ -30,7 +30,7 @@ const LayoutGlobal = () => {
     return <></>;
   }
   return (
-    <div className="fixed inset-0 bg-black z-[10000] flex">
+    <div className="fixed inset-0 bg-black z-[10] flex">
       <LoginContent />
     </div>
   );

@@ -39,7 +39,7 @@ const LoginContent = () => {
           router.push("/");
         })
         .catch((res) => {
-          message.error(res?.message || "Thất bại");
+          message.error(res?.message || "Đăng nhập Thất bại");
         });
     },
   });

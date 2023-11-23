@@ -198,9 +198,11 @@ const FormComponent = ({
       return false;
     },
     onRemove(file) {
-      if (file?.uid == selected?.idPath) {
-        return;
-      }
+      console.log("file ==>delete", file);
+      // if (file?.uid == selected?.idPath) {
+      //   message.success("Không thể xóa ảnh chính");
+      //   return;
+      // }
       if (file && file.uid && selected?.id) {
         ProductsApi.deleteSubimage({ id: selected.id, idPath: file.uid })
           .then((res: any) => {
@@ -208,7 +210,7 @@ const FormComponent = ({
             setData(() => res.data.products);
           })
           .catch((res) => {
-            message.success(res.message);
+            message.error(res?.message || "Xóa thất bại");
           });
       }
     },
@@ -223,9 +225,6 @@ const FormComponent = ({
     },
   };
   const [listImageContent, setListImageContent] = useState([]);
-  console.log("========================================");
-
-  console.log(text);
 
   return (
     <Modal

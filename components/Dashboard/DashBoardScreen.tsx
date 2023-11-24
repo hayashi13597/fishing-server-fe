@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import UserApi from "../../api-client/user";
 import { formatMoney, formatNumber } from "@/utils";
-const ECommerce: React.FC = () => {
+const DashBoardScreen: React.FC = () => {
   const account = useSelector((state: RootState) => state.account.account);
   const [DataView, setDataView] = useState({
     totalViewProduct: 0,
@@ -168,4 +168,4 @@ const ECommerce: React.FC = () => {
   );
 };
 
-export default ECommerce;
+export default DashBoardScreen;

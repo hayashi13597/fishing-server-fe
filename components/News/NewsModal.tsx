@@ -22,7 +22,7 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
     User,
     visiable,
   } = selected;
-
+  console.log(selected);
   return (
     <>
       <Modal

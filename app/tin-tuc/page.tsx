@@ -3,7 +3,6 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Table from "@/components/News/Table";
 import React, { useEffect, useState } from "react";
 import NewApi from "@/api-client/new/";
-import data from "@/mock/news_events.json";
 
 const NewsAndEvents = () => {
   const [ListNews, setListNews] = useState([]);

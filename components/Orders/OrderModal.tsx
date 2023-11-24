@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal, Pagination } from "antd";
 import Image from "next/image";
 import { formatMoney } from "@/utils";
 
 import products from "@/mock/products.json";
+import OrderApi from "@/api-client/order";
 
 type ModalType = {
   closeModal?: () => void;
@@ -22,12 +23,26 @@ const OrderModal = ({
   pageCurrentModal = 1,
   setPageCurrentModal,
 }: ModalType) => {
-  const { id } = selected;
+  const { id, codebill, shipping_fee } = selected;
 
+  const [total, setTotal] = useState(0);
+  const [listOrderDetail, setOrderDetail] = useState([]);
+  useEffect(() => {
+    OrderApi.GetDetail(id).then((res) => {
+      const listOr = res.data.orderdetails;
+      setOrderDetail(listOr);
+      setTotal(
+        listOr.reduce((total, item) => {
+          total += item.quantity * item.price;
+          return total;
+        }, shipping_fee)
+      );
+    });
+  }, [codebill, id, shipping_fee]);
   return (
     <>
       <Modal
-        title={`Thông tin đơn hàng #${id}`}
+        title={`Thông tin đơn hàng #${codebill}`}
         open={isModalOpen}
         onCancel={closeModal}
         width={800}
@@ -50,21 +65,20 @@ const OrderModal = ({
                 Số lượng
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black">
-                Tổng tiền
+                Thành tiền
               </th>
             </tr>
           </thead>
           <tbody>
-            {products
-              ?.filter((product) => product.categoryId === id)
+            {listOrderDetail
               .slice(
-                (pageCurrentModal - 1) * itemPerPage,
-                pageCurrentModal * itemPerPage
+                itemPerPage * (pageCurrentModal - 1),
+                itemPerPage * pageCurrentModal
               )
               .map((product) => (
-                <tr>
+                <tr key={`${product.codebill}-ss`}>
                   <td className="border-b border-[#eee] py-5 px-4">
-                    <p className="text-black">{product.name}</p>
+                    <p className="text-black">{product.Product.name}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4">
                     <div
@@ -74,38 +88,36 @@ const OrderModal = ({
                         position: "relative",
                       }}
                     >
-                      <Image src={product.imageUrl} alt={product.name} fill />
+                      <Image
+                        src={product.Product.imageUrl}
+                        alt={product.Product.name}
+                        fill
+                      />
                     </div>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4">
-                    <p className="text-black">{product.sell}</p>
+                    <p className="text-black">{product.quantity}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4">
                     <p className="text-black">
-                      {formatMoney(product.price * product.sell)}
+                      {formatMoney(product.price * product.quantity)}
                     </p>
                   </td>
                 </tr>
               ))}
           </tbody>
+          <tfoot>
+            <td colSpan={3}>
+              <span className="ml-4 font-bold text-xl">Tổng tiền</span>
+            </td>
+            <td className="font-bold ">{formatMoney(total)}</td>
+          </tfoot>
         </table>
-        {products?.filter((product) => product.categoryId === selected.id)
-          ?.length > 0 && (
-          <div
-            className={`w-full flex justify-center py-5 md:py-4 S${
-              itemPerPage >=
-              products?.filter((product) => product.categoryId === id)?.length
-                ? "hidden"
-                : ""
-            }`}
-          >
+        {listOrderDetail.length > itemPerPage && (
+          <div className="flex justify-center mt-2">
             <Pagination
               defaultCurrent={1}
-              total={
-                products?.filter(
-                  (product) => product.categoryId === selected.id
-                )?.length
-              }
+              total={listOrderDetail.length}
               pageSize={itemPerPage}
               current={pageCurrentModal}
               onChange={(page) => setPageCurrentModal(page)}

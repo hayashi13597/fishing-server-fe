@@ -74,17 +74,9 @@ const EditorContent = ({ text, setText, title }: EditorContentProps) => {
 
     setText(newvalue);
   };
-  // if (covertText && covertText.includes("display: none !important;")) {
-  //   covertText = covertText.replace(/style\s*=\s*["'][^"']*["']/g, "");
-  // }
-  console.log(
-    "==============================================covertText=========================================================="
-  );
-  console.log(covertText);
-  console.log(
-    "==============================================text=========================================================="
-  );
-  console.log(text);
+  if (covertText && covertText.includes("display: none !important;")) {
+    covertText = covertText.replace(/style\s*=\s*["'][^"']*["']/g, "");
+  }
 
   return (
     <div>

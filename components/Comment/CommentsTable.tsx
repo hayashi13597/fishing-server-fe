@@ -29,7 +29,6 @@ const CommentsTable = ({ title, data, isShow = true }: TableThreeType) => {
   };
 
   const handleDelete = (data: any) => {
-    console.log(data);
     message.success("Xóa thành công");
   };
 

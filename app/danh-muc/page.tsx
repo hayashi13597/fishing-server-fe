@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { UploadCategory } from "@/redux/category/CategorySlicer";
 import { RootState } from "@/redux/store";
 import CateGoriTable from "./category.table";
-// import categories from "@/mock/categories.json";
 
 const Category = () => {
   const listCate = useSelector((state: RootState) => state.cate.listCate);

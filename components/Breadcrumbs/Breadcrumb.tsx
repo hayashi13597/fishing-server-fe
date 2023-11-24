@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Head from "next/head";
 interface BreadcrumbProps {
   pageName: string;
 }
@@ -8,7 +9,9 @@ const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
       <h2 className="text-title-md2 font-semibold text-black dark:text-white">
         {pageName}
       </h2>
-
+      <Head>
+        <title>Quản lý {pageName}</title>
+      </Head>
       <nav>
         <ol className="flex items-center gap-2">
           <li>

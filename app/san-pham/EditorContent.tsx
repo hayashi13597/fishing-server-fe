@@ -49,7 +49,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
       if (newvalue.includes("image")) {
         newvalue = newvalue.replace(
           /linkimage(.*?)linkimage/g,
-          `<p class="d-flex"><img width="300" height="150" src="$1" class="sm:max-w-[600px] m-auto max-w-full sm:w-auto w-full h-auto object-cover" alt="${title}" /></p>`
+          `<p class="d-flex"><img width="300" height="150" src="$1" class="sm:max-w-[600px] image_editor m-auto max-w-full sm:w-auto w-full h-auto object-cover" alt="${title}" /></p>`
         );
       }
       if (newvalue.includes("video")) {

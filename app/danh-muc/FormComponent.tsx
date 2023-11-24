@@ -231,6 +231,7 @@ const FormComponent = ({
           <Form.Item<FieldType>
             label="Danh mục"
             name="categoryId"
+            className="capitalize"
             initialValue={selected?.categoryId || null}
             rules={[
               { required: true, message: "Danh mục không được để trống!" },

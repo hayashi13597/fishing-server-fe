@@ -7,7 +7,7 @@ import ProductTable from "./product.table";
 import ProductsApi from "@/api-client/product";
 
 const Products = () => {
-  const [products, setListProduct] = useState(productsss);
+  const [products, setListProduct] = useState([]);
   useEffect(() => {
     ProductsApi.getAll().then((res) => {
       setListProduct(res.data.products);
@@ -17,6 +17,7 @@ const Products = () => {
   return (
     <>
       <Breadcrumb pageName="Sản phẩm" />
+
       <div className="flex flex-col gap-10">
         <ProductTable
           setData={setListProduct}

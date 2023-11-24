@@ -106,6 +106,7 @@ const FormComponent = ({
         return;
       }
       dataUpload.id = selected.id;
+
       NewApi.Edit(dataUpload)
         .then((res: any) => {
           setData((prev: any[]) => {
@@ -136,8 +137,7 @@ const FormComponent = ({
       },
     ],
     beforeUpload(file) {
-      const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
+      const isJpgOrPng = file.type.includes("image");
       if (!isJpgOrPng) {
         message.error("Bạn chỉ có thể tải định dạng JPG/PNG!");
         return Upload.LIST_IGNORE;
@@ -217,13 +217,13 @@ const FormComponent = ({
         <Form.Item<FieldType>
           initialValue={
             selected?.time_end
-              ? moment(selected.time_end).format("YYYY-MM-DD")
+              ? moment(selected.time_end).format("YYYY-MM-DD HH:mm:ss")
               : ""
           }
           label="Thời gian sự kiện:"
           name="time_end"
         >
-          <Input type="date" />
+          <Input type="datetime-local" />
         </Form.Item>
         <Form.Item label="Danh sách ảnh">
           <ImageContainer

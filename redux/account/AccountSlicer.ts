@@ -47,7 +47,6 @@ const AccountSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(FetchFirstLoginWithToken.fulfilled, (state, action) => {
-      console.log(action.payload.account);
       state.account = action.payload.account;
     });
   },

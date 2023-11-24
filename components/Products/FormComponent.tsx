@@ -167,7 +167,6 @@ const FormComponent = ({
     onRemove() {
       if (DataSubmit.idPath) {
         UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {
-          console.log(res);
         });
       }
     },

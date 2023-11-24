@@ -10,8 +10,16 @@ type ModalType = {
 };
 
 const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
-  const { name, price, imageUrl, isEvent, createdAt, visiable, description } =
-    selected;
+  const {
+    name,
+    price,
+    imageUrl,
+    isEvent,
+    createdAt,
+    visiable,
+    description,
+    timeEvent = 0,
+  } = selected;
 
   return (
     <>
@@ -47,11 +55,16 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
               {formatMoney(price)}
             </p>
             <p className="mt-1 md:mt-3 line-clamp-3">{description}</p>
-
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Ngày đăng: <br className="block md:hidden" />{" "}
               <span className="font-semibold">{formatDateTime(createdAt)}</span>
             </p>
+            {isEvent && timeEvent && (
+              <p className="mt-1 md:mt-3 text-sm md:text-base">
+                Ngày đăng: <br className="block md:hidden" />{" "}
+                <span className="font-semibold">{timeEvent} ngày</span>
+              </p>
+            )}
 
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Trạng thái:{" "}

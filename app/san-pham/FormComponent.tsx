@@ -12,8 +12,9 @@ import EditorContent from "./EditorContent";
 const { Option } = Select;
 const { TextArea } = Input;
 interface ListImageUrl {
-  imageUrl: String;
-  idPath: String;
+  uid: string;
+  url: string;
+  name: string;
 }
 type FieldType = {
   name?: string;
@@ -60,7 +61,6 @@ const FormComponent = ({
 }: FormComponentType) => {
   const [form] = Form.useForm();
   const [text, setText] = useState(selected?.content || "");
-  console.log("selected?.content ", selected?.content);
   const account = useSelector((state: RootState) => state.account.account);
   let listImageRender: any[] = [];
 
@@ -69,13 +69,21 @@ const FormComponent = ({
 
     listImageRender = listImageRender.map((item, index) => ({
       uid: item.idPath,
-      name: (selected?.name || selected?.title) + " ảnh phụ " + index,
+      name: " Ảnh phụ  thứ ->" + index + 1,
       url: item.imageUrl,
     }));
+    listImageRender.unshift({
+      uid: selected?.idPath,
+      name: "Ảnh chính ",
+      url: selected?.imageUrl,
+    });
   } catch {}
+  console.log("listImageRender", listImageRender);
   const [listSubImage, setListSubImage] = useState<ListImageUrl[]>(
     listImageRender || []
   );
+
+  console.log("listSubImage", listSubImage);
   const Categories = useSelector((state: RootState) => state.cate.listCate);
   const onFinish = (values: any) => {
     if (!text) {
@@ -89,6 +97,7 @@ const FormComponent = ({
       saleoff,
       visiable = true,
     } = values;
+    const { url = "", uid = "" } = listSubImage[0];
     if (type == "add") {
       if (listSubImage.length < 1) {
         message.error("Yêu cầu tối thiểu 1 hình ảnh");
@@ -99,11 +108,11 @@ const FormComponent = ({
         message.error("Vui lòng điền đầy đủ thông tin");
         return;
       }
-      const { imageUrl = "", idPath = "" } = listSubImage[0];
+
       // listSubImage.shift();
       const DataUpload: any = {
-        imageUrl,
-        idPath,
+        imageUrl: url,
+        idPath: uid,
         category_id: categoryId,
         description,
         name,
@@ -128,8 +137,14 @@ const FormComponent = ({
         });
     } else {
       if (!selected?.id) {
-        message.error("Thiếu id sao sửa");
+        message.error("Không có dữ kiệu");
       }
+      if (listSubImage.length < 1) {
+        message.error("Yêu cầu tối thiểu 1 hình ảnh");
+        return;
+      }
+      console.log("listSubImage", listSubImage);
+
       const dataEdit: any = {
         description,
         name,
@@ -137,21 +152,27 @@ const FormComponent = ({
         saleoff,
         visiable,
         category_id: categoryId,
-        imageUrl: selected?.imageUrl,
-        idPath: selected?.idPath,
+        imageUrl: url,
+        idPath: uid,
         id: selected?.id,
         content: text,
       };
-      if (listSubImage.length) {
-        dataEdit.listSubImage = JSON.stringify(
-          listSubImage.filter((item: any) => !item.uid)
+      if (listSubImage.length > 0) {
+        dataEdit.listSubimages = JSON.stringify(
+          listSubImage
+            .slice(1)
+            .map((item: any) => ({ imageUrl: item.url, idPath: item.uid }))
         );
       }
+
       ProductsApi.edit(dataEdit)
         .then((res: any) => {
           message.success(res.message);
-          setData(() => res.data.products);
-          setListSubImage([]);
+          setData((prev) => [
+            res.data.product,
+            ...prev.filter((item) => item.id != selected.id),
+          ]);
+
           setText("");
           closeModal && closeModal();
         })
@@ -165,17 +186,9 @@ const FormComponent = ({
     name: "fileupload",
     listType: "picture",
     multiple: true,
-    defaultFileList: selected && [
-      {
-        uid: selected?.id.toString(),
-        name: selected?.name || selected?.title,
-        url: selected?.imageUrl,
-      },
-      ...listImageRender,
-    ],
+    defaultFileList: selected?.id ? listSubImage : [],
     beforeUpload(file) {
-      const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
+      const isJpgOrPng = file.type.includes("image");
       if (!isJpgOrPng) {
         message.error("Bạn chỉ có thể tải định dạng JPG/PNG!");
         return Upload.LIST_IGNORE;
@@ -188,26 +201,29 @@ const FormComponent = ({
       const FormDataFile = new FormData();
       FormDataFile.append("file", file);
 
-      UploadImageApi.add(FormDataFile).then((res: any) => {
-        setListSubImage((prev) => [
-          ...prev,
-          { idPath: res.idPath, imageUrl: res.imageUrl },
-        ]);
-        message.success("Bạn có thể tạo danh mục");
-      });
+      UploadImageApi.add(FormDataFile)
+        .then((res: any) => {
+          setListSubImage((prev) => [
+            ...prev,
+            { name: "Ảnh Upload", uid: res.idPath, url: res.imageUrl },
+          ]);
+          message.success("Tải ảnh sản phẩm thành công");
+        })
+        .catch(() => {
+          message.error("Tải ảnh  sản phẩm thất bại");
+        });
       return false;
     },
     onRemove(file) {
       console.log("file ==>delete", file);
-      // if (file?.uid == selected?.idPath) {
-      //   message.success("Không thể xóa ảnh chính");
-      //   return;
-      // }
+
       if (file && file.uid && selected?.id) {
         ProductsApi.deleteSubimage({ id: selected.id, idPath: file.uid })
           .then((res: any) => {
-            message.success(res.message);
-            setData(() => res.data.products);
+            message.success("Xóa ảnh thành công");
+            setListSubImage((prev) =>
+              prev.filter((item) => item.uid !== file.uid)
+            );
           })
           .catch((res) => {
             message.error(res?.message || "Xóa thất bại");
@@ -224,7 +240,6 @@ const FormComponent = ({
       authorization: "Token",
     },
   };
-  const [listImageContent, setListImageContent] = useState([]);
 
   return (
     <Modal
@@ -268,16 +283,14 @@ const FormComponent = ({
           </Form.Item>
         )}
 
-        {title === "sản phẩm" && (
-          <Form.Item<FieldType>
-            label="Giá"
-            name="price"
-            rules={[{ required: true, message: "Giá không được để trống!" }]}
-            initialValue={selected?.price || 0}
-          >
-            <Input type="number" min={0} placeholder="Giá" />
-          </Form.Item>
-        )}
+        <Form.Item<FieldType>
+          label="Giá"
+          name="price"
+          rules={[{ required: true, message: "Giá không được để trống!" }]}
+          initialValue={selected?.price || 0}
+        >
+          <Input type="number" min={0} placeholder="Giá" />
+        </Form.Item>
 
         <Form.Item<FieldType>
           label="Danh mục"

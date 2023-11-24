@@ -163,3 +163,15 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+p:has(img) {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.ql-video {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

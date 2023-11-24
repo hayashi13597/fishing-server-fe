@@ -6,7 +6,7 @@ import Table from "@/components/Users/Table";
 import users from "@/mock/users.json";
 import UserApi from "@/api-client/user";
 const UserAccount = () => {
-  const [listAfccount, setListAccount] = useState(users);
+  const [listAfccount, setListAccount] = useState([]);
   useEffect(() => {
     UserApi.GetAll().then((res) => {
       setListAccount(() => res.data.accounts);

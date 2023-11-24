@@ -45,7 +45,7 @@ const LoginContent = () => {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full z-10">
       <div className="rounded-sm h-screen border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">

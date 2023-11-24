@@ -139,16 +139,15 @@ const ContactTable = ({ data }: TableThreeType) => {
             ))}
           </tbody>
         </table>
-        <div className="flex justify-center items-center mt-2">
-          <Pagination
-            total={total}
-            pageSize={itemPerPage}
-            current={pageCurrent}
-            onChange={(page) => setPageCurrent(page)}
-          />
-        </div>
       </div>
-
+      <div className="flex justify-center items-center mt-2">
+        <Pagination
+          total={total}
+          pageSize={itemPerPage}
+          current={pageCurrent}
+          onChange={(page) => setPageCurrent(page)}
+        />
+      </div>
       {isEdit && (
         <FormComponent
           type="edit"

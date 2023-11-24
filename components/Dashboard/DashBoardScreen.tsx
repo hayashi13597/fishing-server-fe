@@ -30,7 +30,6 @@ const DashBoardScreen: React.FC = () => {
       });
     }
   }, [account.id]);
-  console.log(DataView.listProductSellFinish, DataView.listOrderSuccess);
   const totalImcome = DataView.listProductSellFinish.reduce((sum, item) => {
     sum += item.price * item.quantity;
     return sum;
@@ -149,18 +148,18 @@ const DashBoardScreen: React.FC = () => {
       <div className="flex flex-col gap-10 mt-10">
         <TableTwo
           title="Sản phẩm bán chạy"
-          data={DataView.listProductSelltop}
+          data={DataView?.listProductSelltop || []}
           link="/san-pham"
         />
         <TableTwo
           title="Sản phẩm mới nhất"
-          data={DataView.listProductNew}
+          data={DataView?.listProductNew || []}
           sortType="dateTime"
           link="/san-pham"
         />
         <Table
           title="Tài khoản mới tạo"
-          data={DataView.listAccountNew}
+          data={DataView?.listAccountNew || []}
           isShowAction={false}
         />
       </div>

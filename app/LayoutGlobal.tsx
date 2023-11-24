@@ -25,7 +25,7 @@ const LayoutGlobal = () => {
     CategoriApi.getAll().then((res) => {
       dispatch(UploadCategory(res.data.categories));
     });
-  }, []);
+  }, [account.id]);
   if (account.id && account.role !== "member") {
     return <></>;
   }

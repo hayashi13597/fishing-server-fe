@@ -26,5 +26,8 @@ class UserApi {
   Delete(id: string) {
     return apiClient.delete(this.path + id);
   }
+  Dashboard() {
+    return apiClient.get(this.path + "dashboard");
+  }
 }
 export default new UserApi();

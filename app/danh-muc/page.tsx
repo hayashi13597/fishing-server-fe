@@ -8,10 +8,10 @@ import CateGoriTable from "./category.table";
 
 const Category = () => {
   const listCate = useSelector((state: RootState) => state.cate.listCate);
-  const [listCategories, setCategories] = useState([]);
+  const [listCategories, setCategories] = useState(listCate);
 
   useEffect(() => {
-    setCategories(listCate);
+    setCategories(() => listCate);
   }, [listCate.length]);
   return (
     <>

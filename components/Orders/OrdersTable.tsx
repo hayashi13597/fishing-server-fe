@@ -37,7 +37,7 @@ export enum StatusPay {
   "s4" = "Thành công",
   "s5" = "Thất bại",
 }
-const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
+const OrdersTable = () => {
   const [pageCurrent, setPageCurrent] = useState(1);
   const [pageCurrentModal, setPageCurrentModal] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,13 +47,13 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
   const [total, setTotal] = useState(1);
 
   useEffect(() => {
-    OrderApi.GetAll(itemPerPage, (pageCurrent - 1) * pageCurrent).then(
+    OrderApi.GetAll(itemPerPage, (pageCurrent - 1) * itemPerPage).then(
       (res: any) => {
         setListOrder(() => res.data.orders);
         setTotal(() => res.data.total);
       }
     );
-  }, []);
+  }, [pageCurrent]);
 
   const showModal = (product: any) => {
     setIsModalOpen(true);
@@ -75,8 +75,21 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
   };
 
   const handleDelete = (data: any) => {
-    console.log(data);
-    message.success("Xóa thành công");
+    if (data.id) {
+      OrderApi.DeleteOrder(data.id)
+        .then((res: any) => {
+          message.success(res.message);
+          setTotal((prev) => prev - 1);
+          setListOrder((prev) => [
+            ...prev.filter((item) => item.id != data.id),
+          ]);
+        })
+        .catch(() => {
+          message.error("Xóa hóa đơn thất bại");
+        });
+    } else {
+      message.error("Xóa hóa đơn thất bại");
+    }
   };
 
   return (
@@ -107,7 +120,7 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
           </thead>
           <tbody>
             {ListOrder.map((item) => (
-              <tr key={`order-${item.codebill + Math.random() * 8}`}>
+              <tr key={`order-${item.codebill}`}>
                 <td className="border-b border-[#eee] py-5 dark:border-strokedark">
                   <h5 className="font-medium  text-black dark:text-white text-center">
                     # {item.codebill}
@@ -182,10 +195,10 @@ const OrdersTable = ({ title, data, isShow = true }: TableThreeType) => {
             ))}
           </tbody>
         </table>
-        {data?.length > 0 && (
+        {total > 0 && (
           <div
             className={`flex justify-center py-5 md:py-4 S${
-              itemPerPage >= data?.length ? "hidden" : ""
+              itemPerPage >= ListOrder.length ? "hidden" : ""
             }`}
           >
             <Pagination

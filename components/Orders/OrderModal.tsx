@@ -23,7 +23,7 @@ const OrderModal = ({
   pageCurrentModal = 1,
   setPageCurrentModal,
 }: ModalType) => {
-  const { id, codebill, shipping_fee } = selected;
+  const { id, codebill, shipping_fee, discount } = selected;
 
   const [total, setTotal] = useState(0);
   const [listOrderDetail, setOrderDetail] = useState([]);
@@ -39,6 +39,7 @@ const OrderModal = ({
       );
     });
   }, [codebill, id, shipping_fee]);
+
   return (
     <>
       <Modal
@@ -60,6 +61,9 @@ const OrderModal = ({
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black">
                 Hình ảnh
+              </th>
+              <th className="min-w-[120px] py-4 px-4 font-medium text-black">
+                Giá bán
               </th>
               <th className="min-w-[120px] py-4 px-4 font-medium text-black">
                 Số lượng
@@ -96,6 +100,9 @@ const OrderModal = ({
                     </div>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4">
+                    <p className="text-black">{formatMoney(product.price)}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4">
                     <p className="text-black">{product.quantity}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4">
@@ -107,10 +114,14 @@ const OrderModal = ({
               ))}
           </tbody>
           <tfoot>
-            <td colSpan={3}>
-              <span className="ml-4 font-bold text-xl">Tổng tiền</span>
+            <td colSpan={4}>
+              <span className="ml-4 font-bold text-xl">
+                Tổng tiền {discount ? `(Giảm giá ${discount}%)` : ""}
+              </span>
             </td>
-            <td className="font-bold ">{formatMoney(total)}</td>
+            <td className="font-bold ">
+              {formatMoney(total * (1 - discount / 100))}
+            </td>
           </tfoot>
         </table>
         {listOrderDetail.length > itemPerPage && (

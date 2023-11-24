@@ -5,7 +5,13 @@ export function formatMoney(price: number) {
   }
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
 }
-
+export function formatNumber(quantity: number) {
+  if (quantity >= 1000) return `${quantity / 1000} +K`;
+  else if (quantity >= 1000000) return `${(quantity / 1000000).toFixed(1)} M`;
+  else if (quantity >= 1000000000)
+    return `${(quantity / 1000000000).toFixed(1)} B`;
+  return quantity;
+}
 export function formatDateTime(date: string) {
   return new Date(date).toLocaleDateString("vi-VN", {
     weekday: "long",

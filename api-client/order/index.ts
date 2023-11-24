@@ -25,5 +25,8 @@ const OrderApi = {
       },
     });
   },
+  DeleteOrder(id) {
+    return apiClient.delete(this.path + id);
+  },
 };
 export default OrderApi;

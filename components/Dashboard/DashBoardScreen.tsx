@@ -1,19 +1,48 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CardDataStats from "../CardDataStats";
 import TableTwo from "../Tables/TableTwo";
 
 import products from "@/mock/products.json";
 import users from "@/mock/users.json";
 import Table from "../Users/Table";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import UserApi from "../../api-client/user";
+import { formatMoney, formatNumber } from "@/utils";
 const ECommerce: React.FC = () => {
+  const account = useSelector((state: RootState) => state.account.account);
+  const [DataView, setDataView] = useState({
+    totalViewProduct: 0,
+    totalViewNew: 0,
+    listProductSellFinish: [],
+    totalProduct: 0,
+    totalAccount: 0,
+    listProductSelltop: [],
+    listProductNew: [],
+    listAccountNew: [],
+    listOrderSuccess: [],
+  });
+  useEffect(() => {
+    if (account.id) {
+      UserApi.Dashboard().then((res) => {
+        setDataView(() => res.data);
+      });
+    }
+  }, [account.id]);
+  console.log(DataView.listProductSellFinish, DataView.listOrderSuccess);
+  const totalImcome = DataView.listProductSellFinish.reduce((sum, item) => {
+    sum += item.price * item.quantity;
+    return sum;
+  }, 0);
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardDataStats
           title="Tổng lượt xem"
-          total="$3.456K"
+          total={`${formatNumber(
+            DataView.totalViewNew + DataView.totalViewProduct
+          )}`}
           rate="0.43%"
           levelUp
         >
@@ -35,7 +64,12 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Doanh thu" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats
+          title="Doanh thu tạm tính"
+          total={`${formatMoney(totalImcome)}`}
+          rate="4.35%"
+          levelUp
+        >
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -60,7 +94,7 @@ const ECommerce: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Tổng số sản phẩm"
-          total="2.450"
+          total={`${formatNumber(DataView.totalProduct)}`}
           rate="2.59%"
           levelUp
         >
@@ -84,7 +118,7 @@ const ECommerce: React.FC = () => {
         </CardDataStats>
         <CardDataStats
           title="Tổng số người dùng"
-          total="3.456"
+          total={`${formatNumber(DataView.totalAccount)}`}
           rate="0.95%"
           levelDown
         >
@@ -113,22 +147,20 @@ const ECommerce: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-10 mt-10">
-        <TableTwo title="Sản phẩm bán chạy" data={products} link="/san-pham" />
+        <TableTwo
+          title="Sản phẩm bán chạy"
+          data={DataView.listProductSelltop}
+          link="/san-pham"
+        />
         <TableTwo
           title="Sản phẩm mới nhất"
-          data={products}
+          data={DataView.listProductNew}
           sortType="dateTime"
           link="/san-pham"
         />
         <Table
           title="Tài khoản mới tạo"
-          data={users
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-            .slice(0, 4)}
+          data={DataView.listAccountNew}
           isShowAction={false}
         />
       </div>

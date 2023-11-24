@@ -6,6 +6,8 @@ import { Pagination, Popconfirm, message } from "antd";
 import FormComponent from "./FormComponent";
 import OrderModal from "./OrderModal";
 import OrderApi from "@/api-client/order";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const itemPerPage: number = 5;
 
@@ -38,6 +40,7 @@ export enum StatusPay {
   "s5" = "Thất bại",
 }
 const OrdersTable = () => {
+  const account = useSelector((state: RootState) => state.account.account);
   const [pageCurrent, setPageCurrent] = useState(1);
   const [pageCurrentModal, setPageCurrentModal] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,13 +50,14 @@ const OrdersTable = () => {
   const [total, setTotal] = useState(1);
 
   useEffect(() => {
+    if (!account.id) return;
     OrderApi.GetAll(itemPerPage, (pageCurrent - 1) * itemPerPage).then(
       (res: any) => {
         setListOrder(() => res.data.orders);
         setTotal(() => res.data.total);
       }
     );
-  }, [pageCurrent]);
+  }, [pageCurrent, account.id]);
 
   const showModal = (product: any) => {
     setIsModalOpen(true);

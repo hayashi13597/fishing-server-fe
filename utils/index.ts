@@ -52,7 +52,7 @@ const timeSetTing: any = {
   hour: "giờ",
   second: "giây",
   seconds: "giây",
-  in: "",
+  in: "trong",
   a: "một",
 };
 export function HandleTimeDiff(timestamp: any, timeEnd = "") {

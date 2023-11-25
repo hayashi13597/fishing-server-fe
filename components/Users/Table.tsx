@@ -6,6 +6,8 @@ import UserModal from "./UserModal";
 import UserForm from "./UserForm";
 import Link from "next/link";
 import UserApi from "@/api-client/user";
+import { SearchProps } from "antd/es/input";
+import Search from "antd/es/input/Search";
 const itemPerPage: number = 5;
 
 type TableThreeType = {
@@ -58,11 +60,17 @@ const Table = ({
         });
     }
   };
-
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    UserApi.Search(value).then((res: any) => {
+      setData(() => {
+        return res.data.users;
+      });
+    });
+  };
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        {title && (
+        {title ? (
           <div className="pb-6 px-4 md:px-6 flex items-center justify-between">
             <h4 className="text-xl font-semibold text-black dark:text-white">
               {title || "Latest User"}
@@ -71,8 +79,20 @@ const Table = ({
               Xem tất cả
             </Link>
           </div>
+        ) : (
+          <div className="py-5 max-w-[300px]">
+            <form onSubmit={(e) => e.preventDefault()}>
+              <Search
+                placeholder="Tìm kiếm tài khoản theo email?"
+                allowClear
+                enterButton="Tìm kiếm"
+                size="large"
+                onSearch={onSearch}
+              />
+            </form>
+          </div>
         )}
-        <div className="w-full border mb-5"></div>
+
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>

@@ -1,13 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { formatDateTime, formatMoney } from "@/utils";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
-import { Pagination, Popconfirm, message } from "antd";
+import { Form, Input, Pagination, Popconfirm, message } from "antd";
 
 import FormComponent from "./FormComponent";
 import ModalComponent from "./ModalComponent";
 import ProductsApi from "@/api-client/product";
+import { Debounced } from "react-swisskit";
+import Search, { SearchProps } from "antd/es/input/Search";
 
 const itemPerPage: number = 5;
 
@@ -69,16 +71,34 @@ const ProductTable = ({
     }
   };
 
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    ProductsApi.search(value).then((res: any) => {
+      setData(() => {
+        return res.data.products;
+      });
+    });
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
-        <div className="flex justify-end mb-5">
-          <button
-            className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-            onClick={showAddForm}
-          >
-            Thêm {title}
-          </button>
+        <div className="flex justify-between py-5">
+          <form onSubmit={(e) => e.preventDefault()}>
+            <Search
+              placeholder="Tìm kiếm sản phẩm?"
+              allowClear
+              enterButton="Tìm kiếm"
+              size="large"
+              onSearch={onSearch}
+            />
+          </form>
+          <div className="flex ">
+            <button
+              className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+              onClick={showAddForm}
+            >
+              Thêm {title}
+            </button>
+          </div>
         </div>
         <table className="w-full table-auto">
           <thead>

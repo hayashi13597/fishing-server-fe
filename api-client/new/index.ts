@@ -30,5 +30,12 @@ class NewApi {
   Delete(id: string) {
     return apiClient.delete(this.path + id);
   }
+  Search(search: string) {
+    return apiClient.post(this.path + "search", {
+      data: {
+        search,
+      },
+    });
+  }
 }
 export default new NewApi();

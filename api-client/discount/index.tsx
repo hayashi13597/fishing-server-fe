@@ -22,5 +22,12 @@ const DiscountApi = {
   DeleteDiscount(id: number) {
     return apiClient.delete(this.path + id);
   },
+  Search(search: string) {
+    return apiClient.post(this.path + "search", {
+      data: {
+        search,
+      },
+    });
+  },
 };
 export default DiscountApi;

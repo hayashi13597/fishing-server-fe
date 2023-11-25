@@ -7,6 +7,7 @@ import OrderModal from "./OrderModal";
 import OrderApi from "@/api-client/order";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Search, { SearchProps } from "antd/es/input/Search";
 
 const itemPerPage: number = 5;
 
@@ -89,9 +90,26 @@ const OrdersTable = () => {
       message.error("Xóa hóa đơn thất bại");
     }
   };
-
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    OrderApi.Search(value).then((res: any) => {
+      setListOrder(() => {
+        return res.data.orders;
+      });
+    });
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="flex justify-between py-5">
+        <form onSubmit={(e) => e.preventDefault()}>
+          <Search
+            placeholder="Tìm kiếm hóa đơn"
+            allowClear
+            enterButton="Tìm kiếm"
+            size="large"
+            onSearch={onSearch}
+          />
+        </form>
+      </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>

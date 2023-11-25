@@ -18,6 +18,7 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
     createdAt,
     visible,
     description,
+    content,
   } = selected;
 
   let ListImage: any = [];
@@ -94,6 +95,8 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
               Trạng thái:{" "}
               <span className="font-semibold"> {visible ? "Hiện" : "Ẩn"}</span>
             </p>
+            Nội dung:
+            <div dangerouslySetInnerHTML={{ __html: content }}></div>
           </div>
         </div>
       </Modal>

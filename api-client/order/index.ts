@@ -31,5 +31,12 @@ const OrderApi = {
   DeleteOrderDetail(id) {
     return apiClient.delete(this.path + "detail/" + id);
   },
+  Search(search: string) {
+    return apiClient.post(this.path + "search", {
+      data: {
+        search,
+      },
+    });
+  },
 };
 export default OrderApi;

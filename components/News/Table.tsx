@@ -7,6 +7,7 @@ import NewApi from "@/api-client/new";
 import NewsModal from "./NewsModal";
 import FormComponent from "./FormComponent";
 import { HandleTimeDiff } from "@/utils";
+import Search, { SearchProps } from "antd/es/input/Search";
 
 const itemPerPage: number = 5;
 
@@ -64,17 +65,34 @@ const Table = ({ title, data, isShow = true, setData }: TableThreeType) => {
         });
     }
   };
-
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    NewApi.Search(value).then((res: any) => {
+      setData(() => {
+        return res.data.events;
+      });
+    });
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
-        <div className="flex justify-end mb-5">
-          <button
-            className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-            onClick={showAddForm}
-          >
-            Thêm {title}
-          </button>
+        <div className="flex justify-between py-5">
+          <form onSubmit={(e) => e.preventDefault()}>
+            <Search
+              placeholder="Tìm kiếm tin tức"
+              allowClear
+              enterButton="Tìm kiếm"
+              size="large"
+              onSearch={onSearch}
+            />
+          </form>
+          <div className="flex ">
+            <button
+              className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+              onClick={showAddForm}
+            >
+              Thêm {title}
+            </button>
+          </div>
         </div>
         <table className="w-full table-auto">
           <thead>

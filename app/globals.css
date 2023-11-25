@@ -175,3 +175,11 @@ p:has(img) {
   justify-content: center;
   align-items: center;
 }
+.ant-input-search-button {
+  background-color: #4f61e3 !important;
+  opacity: 80 !important;
+}
+.ant-input-search-button:hover {
+  background-color: #4f61e3 !important;
+  opacity: 100 !important;
+}

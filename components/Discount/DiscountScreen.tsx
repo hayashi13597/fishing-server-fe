@@ -9,6 +9,8 @@ import { FaRegPaperPlane } from "react-icons/fa";
 import { RenderExpired, formatDateTime } from "@/utils";
 import DiscountApi from "@/api-client/discount";
 import AddDiscount from "./FormComponent";
+import { SearchProps } from "antd/es/input";
+import Search from "antd/es/input/Search";
 
 const itemPerPage = 5;
 
@@ -67,16 +69,33 @@ const DiscountScreen = () => {
       message.error("Xóa mã giảm giá thất bại");
     }
   };
-
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    DiscountApi.Search(value).then((res: any) => {
+      setListDiscount(() => {
+        return res.data.discounts;
+      });
+    });
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <div className="flex justify-end mb-5">
-        <button
-          className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-          onClick={showAddForm}
-        >
-          Thêm Mã giảm giá
-        </button>
+      <div className="flex justify-between py-5">
+        <form onSubmit={(e) => e.preventDefault()}>
+          <Search
+            placeholder="Tìm kiếm mã giảm giá"
+            allowClear
+            enterButton="Tìm kiếm"
+            size="large"
+            onSearch={onSearch}
+          />
+        </form>
+        <div className="flex ">
+          <button
+            className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            onClick={showAddForm}
+          >
+            Thêm mã giảm giá
+          </button>
+        </div>
       </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">

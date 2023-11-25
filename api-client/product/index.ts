@@ -34,5 +34,12 @@ const ProductsApi = {
   delete(id: string) {
     return apiClient.delete(this.path + id);
   },
+  search(search: string) {
+    return apiClient.post(this.path + "search", {
+      data: {
+        search,
+      },
+    });
+  },
 };
 export default ProductsApi;

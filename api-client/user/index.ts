@@ -29,5 +29,12 @@ class UserApi {
   Dashboard() {
     return apiClient.get(this.path + "dashboard");
   }
+  Search(text: string) {
+    return apiClient.post(this.path + "search", {
+      data: {
+        search: text,
+      },
+    });
+  }
 }
 export default new UserApi();

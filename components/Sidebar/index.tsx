@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import Image from "next/image";
 import { LiaClipboardListSolid } from "react-icons/lia";
-import { FaRegCalendarAlt, FaRegComment } from "react-icons/fa";
+import { FaRegCalendarAlt, FaRegComment, FaSketch } from "react-icons/fa";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -299,7 +299,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               {/* <!-- Orders --> */}
 
-              {/* <!-- Đánh giá --> */}
+              {/* <!--  Liên hệ--> */}
               <li>
                 <Link
                   href="/lien-he"
@@ -314,25 +314,43 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Liên hệ
                 </Link>
               </li>
-              {/* <!-- Đánh giá --> */}
+              {/* <!--  Liên hệ--> */}
 
-              {/* <!--   Bình luận --> */}
+              {/* <!--    Đánh giá --> */}
               <li>
                 <Link
-                  href="/binh-luan"
+                  href="/danh-gia"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    (pathname === "/binh-luan" ||
-                      pathname.includes("binh-luan")) &&
+                    (pathname === "/danh-gia" ||
+                      pathname.includes("danh-gia")) &&
                     "bg-graydark dark:bg-meta-4"
                   }`}
                 >
                   <div className="text-2xl">
                     <FaRegComment />
                   </div>
-                  Bình luận
+                  Đánh giá
                 </Link>
               </li>
-              {/* <!--     Bình luận--> */}
+              {/* <!--      Đánh giá--> */}
+
+              {/* <!--   Giảm giá --> */}
+              <li>
+                <Link
+                  href="/ma-giam-gia"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    (pathname === "/ma-giam-gia" ||
+                      pathname.includes("ma-giam-gia")) &&
+                    "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+                  <div className="text-2xl">
+                    <FaSketch />
+                  </div>
+                  Mã Giảm giá
+                </Link>
+              </li>
+              {/* <!--     Giảm giá--> */}
             </ul>
           </div>
 

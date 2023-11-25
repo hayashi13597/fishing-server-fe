@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Pagination } from "antd";
+import { Button, Modal, Pagination, Popconfirm, message } from "antd";
 import Image from "next/image";
 import { formatMoney } from "@/utils";
 
 import products from "@/mock/products.json";
 import OrderApi from "@/api-client/order";
+import { CiTrash } from "react-icons/ci";
 
 type ModalType = {
   closeModal?: () => void;
@@ -27,6 +28,7 @@ const OrderModal = ({
 
   const [total, setTotal] = useState(0);
   const [listOrderDetail, setOrderDetail] = useState([]);
+  const [isDelete, setIsDelete] = useState(false);
   useEffect(() => {
     OrderApi.GetDetail(id).then((res) => {
       const listOr = res.data.orderdetails;
@@ -38,8 +40,23 @@ const OrderModal = ({
         }, shipping_fee)
       );
     });
-  }, [codebill, id, shipping_fee]);
-
+  }, [codebill, id, shipping_fee, isDelete]);
+  const handleDeleteOrderDetail = (orderDetailId: number) => {
+    orderDetailId &&
+      OrderApi.DeleteOrderDetail(orderDetailId)
+        .then((res: any) => {
+          message.success(res.message);
+          setOrderDetail((prev) =>
+            prev.filter((item) => item.id != orderDetailId)
+          );
+          setIsDelete((prev) => !prev);
+        })
+        .catch((err) => {
+          message.success(
+            err?.message || "Xóa sản phẩm đơn hàng chi tiết thất bại"
+          );
+        });
+  };
   return (
     <>
       <Modal
@@ -53,88 +70,106 @@ const OrderModal = ({
           </Button>,
         ]}
       >
-        <table className="w-full table-auto">
-          <thead>
-            <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[200px] py-4 px-4 font-medium text-black">
-                Tên sản phẩm
-              </th>
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black">
-                Hình ảnh
-              </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black">
-                Giá bán
-              </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black">
-                Số lượng
-              </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black">
-                Thành tiền
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {listOrderDetail
-              .slice(
-                itemPerPage * (pageCurrentModal - 1),
-                itemPerPage * pageCurrentModal
-              )
-              .map((product) => (
-                <tr key={`${product.codebill}-ss`}>
-                  <td className="border-b border-[#eee] py-5 px-4">
-                    <p className="text-black">{product.Product.name}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4">
-                    <div
-                      style={{
-                        width: "80px",
-                        height: "80px",
-                        position: "relative",
-                      }}
-                    >
-                      <Image
-                        src={product.Product.imageUrl}
-                        alt={product.Product.name}
-                        fill
-                      />
-                    </div>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4">
-                    <p className="text-black">{formatMoney(product.price)}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4">
-                    <p className="text-black">{product.quantity}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4">
-                    <p className="text-black">
-                      {formatMoney(product.price * product.quantity)}
-                    </p>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-          <tfoot>
-            <td colSpan={4}>
-              <span className="ml-4 font-bold text-xl">
-                Tổng tiền {discount ? `(Giảm giá ${discount}%)` : ""}
-              </span>
-            </td>
-            <td className="font-bold ">
-              {formatMoney(total * (1 - discount / 100))}
-            </td>
-          </tfoot>
-        </table>
-        {listOrderDetail.length > itemPerPage && (
-          <div className="flex justify-center mt-2">
-            <Pagination
-              defaultCurrent={1}
-              total={listOrderDetail.length}
-              pageSize={itemPerPage}
-              current={pageCurrentModal}
-              onChange={(page) => setPageCurrentModal(page)}
-            />
-          </div>
-        )}
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                <th className="min-w-[200px] py-4 px-4 font-medium text-black">
+                  Tên sản phẩm
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black">
+                  Hình ảnh
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black">
+                  Giá bán
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black">
+                  Số lượng
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black">
+                  Thành tiền
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
+                  Tác vụ
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {listOrderDetail
+                .slice(
+                  itemPerPage * (pageCurrentModal - 1),
+                  itemPerPage * pageCurrentModal
+                )
+                .map((order) => (
+                  <tr key={`${order.Product.product_id}-order`}>
+                    <td className="border-b border-[#eee] py-5 px-4">
+                      <p className="text-black">{order.Product.name}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4">
+                      <div
+                        style={{
+                          width: "80px",
+                          height: "80px",
+                          position: "relative",
+                        }}
+                      >
+                        <Image
+                          src={order.Product.imageUrl}
+                          alt={order.Product.name}
+                          fill
+                        />
+                      </div>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4">
+                      <p className="text-black">{formatMoney(order.price)}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4">
+                      <p className="text-black">{order.quantity}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4">
+                      <p className="text-black">
+                        {formatMoney(order.price * order.quantity)}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <Popconfirm
+                        title="Bạn có chắc muốn xóa không?"
+                        onConfirm={() => handleDeleteOrderDetail(order.id)}
+                        okText="Xác nhận"
+                        cancelText="Hủy"
+                        okType="danger"
+                      >
+                        <button className="hover:text-primary text-xl">
+                          <CiTrash />
+                        </button>
+                      </Popconfirm>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+            <tfoot>
+              <td colSpan={4}>
+                <span className="ml-4 font-bold text-xl block py-2">
+                  Tổng tiền {discount ? `(Giảm giá ${discount}%)` : ""}
+                </span>
+              </td>
+              <td className="font-bold ">
+                {formatMoney(total * (1 - discount / 100))}
+              </td>
+            </tfoot>
+          </table>
+          {listOrderDetail.length > itemPerPage && (
+            <div className="flex justify-center mt-2">
+              <Pagination
+                defaultCurrent={1}
+                total={listOrderDetail.length}
+                pageSize={itemPerPage}
+                current={pageCurrentModal}
+                onChange={(page) => setPageCurrentModal(page)}
+              />
+            </div>
+          )}
+        </div>
       </Modal>
     </>
   );

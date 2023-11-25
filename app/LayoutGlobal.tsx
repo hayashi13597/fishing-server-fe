@@ -6,6 +6,7 @@ import { FetchFirstLoginWithToken } from "@/redux/account/AccountSlicer";
 import { UploadCategory } from "@/redux/category/CategorySlicer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { message } from "antd";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const LayoutGlobal = () => {

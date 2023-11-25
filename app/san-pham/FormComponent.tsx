@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import ProductsApi from "@/api-client/product";
 import ImageContainer from "@/components/ImageContainer";
 import EditorContent from "./EditorContent";
+import LoadingContainer from "@/components/common/LoadingContainer";
 const { Option } = Select;
 const { TextArea } = Input;
 interface ListImageUrl {
@@ -61,6 +62,7 @@ const FormComponent = ({
 }: FormComponentType) => {
   const [form] = Form.useForm();
   const [text, setText] = useState(selected?.content || "");
+  const [isLoadding, setIsLoadding] = useState(false);
   const account = useSelector((state: RootState) => state.account.account);
   let listImageRender: any[] = [];
 
@@ -78,17 +80,20 @@ const FormComponent = ({
       url: selected?.imageUrl,
     });
   } catch {}
-  console.log("listImageRender", listImageRender);
+
   const [listSubImage, setListSubImage] = useState<ListImageUrl[]>(
     listImageRender || []
   );
 
-  console.log("listSubImage", listSubImage);
   const Categories = useSelector((state: RootState) => state.cate.listCate);
   const onFinish = (values: any) => {
     if (!text) {
       message.error("Vui lòng điền nội dung");
     }
+    const ListImageUpdate = listSubImage.slice(1).map((item) => ({
+      imageUrl: item.url,
+      idPath: item.uid,
+    }));
     const {
       categoryId,
       description,
@@ -109,7 +114,6 @@ const FormComponent = ({
         return;
       }
 
-      // listSubImage.shift();
       const DataUpload: any = {
         imageUrl: url,
         idPath: uid,
@@ -120,10 +124,10 @@ const FormComponent = ({
         user_id: account.id,
         saleoff,
         visiable,
-        listSubimages: JSON.stringify(listSubImage),
+        listSubimages: JSON.stringify(ListImageUpdate),
         content: text,
       };
-
+      setIsLoadding(() => true);
       ProductsApi.add(DataUpload)
         .then((res: any) => {
           message.success(res.message);
@@ -134,6 +138,9 @@ const FormComponent = ({
         })
         .catch((res) => {
           message.error(res?.message);
+        })
+        .finally(() => {
+          setIsLoadding(() => false);
         });
     } else {
       if (!selected?.id) {
@@ -143,7 +150,6 @@ const FormComponent = ({
         message.error("Yêu cầu tối thiểu 1 hình ảnh");
         return;
       }
-      console.log("listSubImage", listSubImage);
 
       const dataEdit: any = {
         description,
@@ -158,13 +164,9 @@ const FormComponent = ({
         content: text,
       };
       if (listSubImage.length > 0) {
-        dataEdit.listSubimages = JSON.stringify(
-          listSubImage
-            .slice(1)
-            .map((item: any) => ({ imageUrl: item.url, idPath: item.uid }))
-        );
+        dataEdit.listSubimages = JSON.stringify(ListImageUpdate);
       }
-
+      setIsLoadding(() => true);
       ProductsApi.edit(dataEdit)
         .then((res: any) => {
           message.success(res.message);
@@ -178,6 +180,9 @@ const FormComponent = ({
         })
         .catch((res) => {
           message.error(res.message);
+        })
+        .finally(() => {
+          setIsLoadding(() => false);
         });
     }
   };
@@ -215,8 +220,6 @@ const FormComponent = ({
       return false;
     },
     onRemove(file) {
-      console.log("file ==>delete", file);
-
       if (file && file.uid && selected?.id) {
         ProductsApi.deleteSubimage({ id: selected.id, idPath: file.uid })
           .then((res: any) => {
@@ -251,6 +254,7 @@ const FormComponent = ({
       width={800}
       footer={<></>}
     >
+      {isLoadding && <LoadingContainer />}
       <Form
         name="formComponent"
         form={form}
@@ -336,9 +340,9 @@ const FormComponent = ({
           label="Mô tả"
           name="description"
           initialValue={selected?.description || null}
-          rules={[{ required: true, message: "Mô tả không được để trống!" }]}
+          rules={[{ required: true, message: "Mô tả  không được để trống!" }]}
         >
-          <TextArea rows={2} placeholder="Nhập mô tả seo" />
+          <TextArea maxLength={255} rows={3} placeholder="Nhập mô tả" />
         </Form.Item>
         <Form.Item label="Thông tin sản phảm">
           <EditorContent text={text} setText={setText} title="content" />

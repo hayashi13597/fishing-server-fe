@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
 import FormComponent from "./FormComponent";
@@ -11,11 +10,6 @@ import { RootState } from "@/redux/store";
 
 const itemPerPage: number = 5;
 
-type TableThreeType = {
-  title?: string;
-  data?: any;
-  isShow?: boolean;
-};
 interface IOrderDetail {
   id: number;
   email: string;

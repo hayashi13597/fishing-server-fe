@@ -35,10 +35,10 @@ const TableTwo = ({
           <p className="font-medium">Lượt xem</p>
         </div>
         <div className="col-span-1 flex items-center justify-center md:justify-start">
-          <p className="font-medium">Giá</p>
+          <p className="font-medium">Đã bán</p>
         </div>
         <div className="col-span-1 flex items-center justify-center md:justify-start">
-          <p className="font-medium">Đã bán</p>
+          <p className="font-medium">Giá</p>
         </div>
       </div>
 
@@ -68,12 +68,12 @@ const TableTwo = ({
             </p>
           </div>
           <div className="col-span-1 flex items-center justify-center md:justify-start">
+            <p className="text-sm text-black dark:text-white">{item.sales}</p>
+          </div>
+          <div className="col-span-1 flex items-center justify-center md:justify-start">
             <p className="text-sm text-black dark:text-white">
               {formatMoney(item.price)}
             </p>
-          </div>
-          <div className="col-span-1 flex items-center justify-center md:justify-start">
-            <p className="text-sm text-black dark:text-white">{item.sales}</p>
           </div>
         </div>
       ))}

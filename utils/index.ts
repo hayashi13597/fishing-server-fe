@@ -20,6 +20,16 @@ export function formatDateTime(date: string) {
     day: "numeric",
   });
 }
+export function isTimeEnd(timecreate: string) {
+  return new Date(timecreate).getTime() - new Date(Date.now()).getTime() > 0;
+}
+export function RenderExpired(timeExprice: string) {
+  if (isTimeEnd(timeExprice)) {
+    return `Còn ${HandleTimeDiff(timeExprice)}`;
+  } else {
+    return "Hết hạn";
+  }
+}
 export const checkImageExist = (url: string) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -42,6 +52,8 @@ const timeSetTing: any = {
   hour: "giờ",
   second: "giây",
   seconds: "giây",
+  in: "",
+  a: "một",
 };
 export function HandleTimeDiff(timestamp: any, timeEnd = "") {
   let result: any = !timeEnd
@@ -58,9 +70,13 @@ export function HandleTimeDiff(timestamp: any, timeEnd = "") {
 
   result = result.replace("ago", "trước");
   result = result.split(" ");
+  result = result.map((item) => {
+    if (timeSetTing[item]) {
+      return timeSetTing[item];
+    } else {
+      return item;
+    }
+  });
 
-  if (timeSetTing[result[1]]) {
-    result[1] = timeSetTing[result[1]];
-  }
   return result.join(" ");
 }

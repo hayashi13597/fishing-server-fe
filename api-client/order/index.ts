@@ -28,5 +28,8 @@ const OrderApi = {
   DeleteOrder(id) {
     return apiClient.delete(this.path + id);
   },
+  DeleteOrderDetail(id) {
+    return apiClient.delete(this.path + "detail/" + id);
+  },
 };
 export default OrderApi;

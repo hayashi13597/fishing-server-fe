@@ -8,6 +8,8 @@ import EditorContent from "@/components/Products/EditorContent";
 import { useDispatch, useSelector } from "react-redux";
 import { UploadCategory } from "@/redux/category/CategorySlicer";
 import { RootState } from "@/redux/store";
+import Loader from "@/components/common/Loader";
+import LoadingContainer from "@/components/common/LoadingContainer";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -56,7 +58,7 @@ const FormComponent = ({
   const [form] = Form.useForm();
   const [text, setText] = useState("");
   const account = useSelector((state: RootState) => state.account.account);
-
+  const [isLoadding, setIsLoadding] = useState(false);
   const initData = {
     imageUrl: selected?.imageUrl || "",
     idPath: selected?.idPath || "",
@@ -83,19 +85,25 @@ const FormComponent = ({
         description,
         visiable,
       };
+      setIsLoadding(() => true);
       CategoriApi.add(dataUpload)
         .then((res: any) => {
           setData((prev: any[]) => {
             const newListCates = [...prev, res.data.category];
             dispatch(UploadCategory(newListCates));
+
             return newListCates;
           });
           form.resetFields();
           message.success(res.message);
+
           closeModal && closeModal();
         })
         .catch((res) => {
           message.error(res.message);
+        })
+        .finally(() => {
+          setIsLoadding(() => false);
         });
     } else {
       if (!selected?.id) {
@@ -113,7 +121,7 @@ const FormComponent = ({
       if (!dataUpload.imageUrl) {
         message.success("Vui lòng nhờ ảnh upload");
       }
-
+      setIsLoadding(() => true);
       CategoriApi.edit(`${selected.id}`, dataUpload)
         .then((res: any) => {
           setData((prev: any[]) => {
@@ -129,6 +137,9 @@ const FormComponent = ({
         })
         .catch((res) => {
           message.error(res.message);
+        })
+        .finally(() => {
+          setIsLoadding(() => false);
         });
     }
   };
@@ -145,8 +156,9 @@ const FormComponent = ({
       },
     ],
     beforeUpload(file) {
-      const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
+      setIsLoadding(() => true);
+      const isJpgOrPng = file.type.includes("image");
+
       if (!isJpgOrPng) {
         message.error("Bạn chỉ có thể tải định dạng JPG/PNG!");
         return Upload.LIST_IGNORE;
@@ -159,19 +171,25 @@ const FormComponent = ({
       const FormDataFile = new FormData();
       FormDataFile.append("file", file);
 
-      UploadImageApi.add(FormDataFile).then((res: any) => {
-        setDataSubmit((prev) => ({
-          ...prev,
-          idPath: res.idPath,
-          imageUrl: res.imageUrl,
-        }));
-        message.success("Bạn có thể tạo danh mục");
-      });
+      UploadImageApi.add(FormDataFile)
+        .then((res: any) => {
+          setDataSubmit((prev) => ({
+            ...prev,
+            idPath: res.idPath,
+            imageUrl: res.imageUrl,
+          }));
+          message.success("Tải ảnh thành công");
+        })
+        .finally(() => {
+          setIsLoadding(() => false);
+        });
       return false;
     },
     onRemove() {
       if (DataSubmit.idPath) {
-        UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {});
+        UploadImageApi.delete(DataSubmit.idPath).then((res: any) => {
+          message.success("Xóa ảnh thành công");
+        });
       }
     },
     onChange({ file, fileList }) {
@@ -195,6 +213,7 @@ const FormComponent = ({
       width={800}
       footer={<></>}
     >
+      {isLoadding && <LoadingContainer />}
       <Form
         name="formComponent"
         form={form}

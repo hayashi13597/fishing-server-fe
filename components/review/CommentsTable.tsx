@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
-import FormComponent from "./FormComponent";
 
-import ContactApi from "@/api-client/contact";
-import { FaRegPaperPlane } from "react-icons/fa";
+import { RenderExpired, formatDateTime } from "@/utils";
+import DiscountApi from "@/api-client/discount";
+import { FaStar } from "react-icons/fa";
+import ReviewApi from "@/api-client/review";
 
 const itemPerPage = 5;
 
@@ -15,56 +16,46 @@ type TableThreeType = {
   data?: any;
   isShow?: boolean;
 };
-interface IContact {
-  id: number;
-  fullname: string;
-  email: string;
-  content: string;
-  phone: string;
+interface IReview {
   status: boolean;
-
-  createdAt: string;
+  id: number;
+  star: number;
+  user_id: number;
+  product_id: number;
+  content: string;
+  listImage: string;
   updatedAt: string;
+  createdAt: string;
+  Product: {
+    name: string;
+  };
 }
-
-const ContactTable = ({ data }: TableThreeType) => {
+const ReviewScreen = () => {
   const [pageCurrent, setPageCurrent] = useState(1);
-
-  const [isEdit, setIsEdit] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const [ListContact, setListContact] = useState<IContact[]>([]);
+  const [listReview, setListReview] = useState<IReview[]>([]);
   const [total, setTotal] = useState(1);
   useEffect(() => {
-    ContactApi.GetAll(itemPerPage, (pageCurrent - 1) * itemPerPage).then(
+    ReviewApi.GetAll(itemPerPage, (pageCurrent - 1) * itemPerPage).then(
       (res: any) => {
-        setListContact(() => res.data.listContact);
+        setListReview(() => res.data.listReview);
         setTotal(() => res.data.total);
       }
     );
-  }, [pageCurrent, isEdit]);
+  }, [pageCurrent, total]);
 
-  const showEditForm = (contact: any) => {
-    setIsEdit(true);
-    setSelected(contact);
-  };
-
-  const closeEditFrom = () => {
-    setIsEdit(false);
-  };
-
-  const handleDelete = (data: IContact) => {
+  const handleDelete = (data: IReview) => {
     if (data.id) {
-      ContactApi.DeleteContact(data.id)
+      ReviewApi.DeleteReview(data.id)
         .then((res: any) => {
           message.success(res.message);
-          setListContact((prev) => prev.filter((item) => item.id != data.id));
+          setListReview((prev) => prev.filter((item) => item.id != data.id));
           setTotal((prev) => prev - 1);
         })
         .catch((err) => {
-          message.error(err?.message || "Xóa liên hệ thất bại!");
+          message.error(err?.message || "Xóa Đánh giá thất bại");
         });
     } else {
-      message.error("Xóa liên hệ thất bại!");
+      message.error("Xóa Đánh giá thất bại");
     }
   };
 
@@ -75,53 +66,42 @@ const ContactTable = ({ data }: TableThreeType) => {
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Họ và tên
+                Tên sản phẩm
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Số điện thoại
+                Số sao
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Nội dung
               </th>
-              <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Trạng thái
-              </th>
+
               <th className="py-4 px-4 font-medium text-black dark:text-white text-center">
                 Tác vụ
               </th>
             </tr>
           </thead>
           <tbody>
-            {ListContact.map((item) => (
+            {listReview.map((item) => (
               <tr key={`contact-${item.id}`}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.fullname}</p>
+                  <p className="text-black dark:text-white capitalize">
+                    {item.Product.name}
+                  </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.phone}</p>
+                  <p className="text-black dark:text-white flex gap-1 items-center">
+                    {item.star}{" "}
+                    <span className="text-yellow-400">
+                      <FaStar />
+                    </span>
+                  </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">{item.content}</p>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                      item.status
-                        ? "text-success bg-success"
-                        : "text-warning bg-danger"
-                    }`}
-                  >
-                    {item.status ? "Đã liên hệ" : "Chưa liên hệ"}
-                  </p>
-                </td>
+
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center justify-center gap-3">
-                    <button
-                      className="hover:text-primary text-xl"
-                      onClick={() => showEditForm(item)}
-                    >
-                      <FaRegPaperPlane />
-                    </button>
                     <Popconfirm
                       title="Bạn có chắc muốn xóa không?"
                       onConfirm={() => handleDelete(item)}
@@ -148,18 +128,8 @@ const ContactTable = ({ data }: TableThreeType) => {
           onChange={(page) => setPageCurrent(page)}
         />
       </div>
-      {isEdit && (
-        <FormComponent
-          type="edit"
-          title="Liên hệ"
-          isOpen={isEdit}
-          selected={selected}
-          closeModal={closeEditFrom}
-          setData={setListContact}
-        />
-      )}
     </div>
   );
 };
 
-export default ContactTable;
+export default ReviewScreen;

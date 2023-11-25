@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import { Pagination, Popconfirm, message } from "antd";
-import FormComponent from "./FormComponent";
 
 import ContactApi from "@/api-client/contact";
 import { FaRegPaperPlane } from "react-icons/fa";
+import { RenderExpired, formatDateTime } from "@/utils";
+import DiscountApi from "@/api-client/discount";
+import AddDiscount from "./FormComponent";
 
 const itemPerPage = 5;
 
@@ -15,73 +17,79 @@ type TableThreeType = {
   data?: any;
   isShow?: boolean;
 };
-interface IContact {
+interface IDiscount {
   id: number;
-  fullname: string;
-  email: string;
-  content: string;
-  phone: string;
+  code: string;
+  value: number;
+  expirydate: string;
   status: boolean;
-
   createdAt: string;
   updatedAt: string;
 }
-
-const ContactTable = ({ data }: TableThreeType) => {
+const DiscountScreen = () => {
   const [pageCurrent, setPageCurrent] = useState(1);
 
   const [isEdit, setIsEdit] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [ListContact, setListContact] = useState<IContact[]>([]);
+  const [listDiscount, setListDiscount] = useState<IDiscount[]>([]);
+
   const [total, setTotal] = useState(1);
   useEffect(() => {
-    ContactApi.GetAll(itemPerPage, (pageCurrent - 1) * itemPerPage).then(
+    DiscountApi.GetAll(itemPerPage, (pageCurrent - 1) * itemPerPage).then(
       (res: any) => {
-        setListContact(() => res.data.listContact);
+        setListDiscount(() => res.data.listDiscount);
         setTotal(() => res.data.total);
       }
     );
-  }, [pageCurrent, isEdit]);
+  }, [pageCurrent, isEdit, total]);
 
-  const showEditForm = (contact: any) => {
+  const showAddForm = (contact: any) => {
     setIsEdit(true);
     setSelected(contact);
   };
 
-  const closeEditFrom = () => {
+  const closeAddFrom = () => {
     setIsEdit(false);
   };
 
-  const handleDelete = (data: IContact) => {
+  const handleDelete = (data: IDiscount) => {
     if (data.id) {
-      ContactApi.DeleteContact(data.id)
+      DiscountApi.DeleteDiscount(data.id)
         .then((res: any) => {
           message.success(res.message);
-          setListContact((prev) => prev.filter((item) => item.id != data.id));
+          setListDiscount((prev) => prev.filter((item) => item.id != data.id));
           setTotal((prev) => prev - 1);
         })
         .catch((err) => {
-          message.error(err?.message || "Xóa liên hệ thất bại!");
+          message.error(err?.message || "Xóa mã giảm giá thất bại");
         });
     } else {
-      message.error("Xóa liên hệ thất bại!");
+      message.error("Xóa mã giảm giá thất bại");
     }
   };
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="flex justify-end mb-5">
+        <button
+          className="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+          onClick={showAddForm}
+        >
+          Thêm Mã giảm giá
+        </button>
+      </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Họ và tên
+                Mã giảm giá
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Số điện thoại
+                Giá trị
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                Nội dung
+                Hạn sử dụng
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 Trạng thái
@@ -92,16 +100,20 @@ const ContactTable = ({ data }: TableThreeType) => {
             </tr>
           </thead>
           <tbody>
-            {ListContact.map((item) => (
+            {listDiscount.map((item) => (
               <tr key={`contact-${item.id}`}>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.fullname}</p>
+                  <p className="text-black dark:text-white">#{item.code}</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.phone}</p>
+                  <p className="text-black dark:text-white">{item.value}%</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.content}</p>
+                  <p className="text-black dark:text-white">
+                    {item.expirydate
+                      ? RenderExpired(item.expirydate)
+                      : "Vô thời hạn"}
+                  </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
@@ -111,17 +123,11 @@ const ContactTable = ({ data }: TableThreeType) => {
                         : "text-warning bg-danger"
                     }`}
                   >
-                    {item.status ? "Đã liên hệ" : "Chưa liên hệ"}
+                    {item.status ? "Đã  sử dụng" : "Chưa sử dụng"}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center justify-center gap-3">
-                    <button
-                      className="hover:text-primary text-xl"
-                      onClick={() => showEditForm(item)}
-                    >
-                      <FaRegPaperPlane />
-                    </button>
                     <Popconfirm
                       title="Bạn có chắc muốn xóa không?"
                       onConfirm={() => handleDelete(item)}
@@ -149,17 +155,17 @@ const ContactTable = ({ data }: TableThreeType) => {
         />
       </div>
       {isEdit && (
-        <FormComponent
+        <AddDiscount
           type="edit"
           title="Liên hệ"
           isOpen={isEdit}
           selected={selected}
-          closeModal={closeEditFrom}
-          setData={setListContact}
+          closeModal={closeAddFrom}
+          setData={setListDiscount}
         />
       )}
     </div>
   );
 };
 
-export default ContactTable;
+export default DiscountScreen;

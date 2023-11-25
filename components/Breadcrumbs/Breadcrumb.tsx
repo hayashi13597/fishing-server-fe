@@ -11,6 +11,7 @@ const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
       </h2>
       <Head>
         <title>Quản lý {pageName}</title>
+        <meta name="description" content={`Trang quản lý ${pageName}`} />
       </Head>
       <nav>
         <ol className="flex items-center gap-2">

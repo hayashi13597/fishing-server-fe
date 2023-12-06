@@ -153,11 +153,15 @@ const OrdersTable = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+                    className={`inline-flex flex-nowrap rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
                       item.status === "s4"
                         ? "text-success bg-success"
                         : item.status === "s5"
                         ? "text-danger bg-danger"
+                        : item.status === "s1"
+                        ? "bg-slate-500 text-black"
+                        : item.status === "s2"
+                        ? "bg-yellow-500 text-danger"
                         : "text-warning bg-warning"
                     }`}
                   >
@@ -211,7 +215,7 @@ const OrdersTable = () => {
             ))}
           </tbody>
         </table>
-        {total > 0 && (
+        {total > itemPerPage ? (
           <div
             className={`flex justify-center py-5 md:py-4 S${
               itemPerPage >= ListOrder.length ? "hidden" : ""
@@ -225,6 +229,8 @@ const OrdersTable = () => {
               onChange={(page) => setPageCurrent(page)}
             />
           </div>
+        ) : (
+          ""
         )}
       </div>
       {selected && (

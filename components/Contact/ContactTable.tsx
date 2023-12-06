@@ -7,6 +7,7 @@ import FormComponent from "./FormComponent";
 
 import ContactApi from "@/api-client/contact";
 import { FaRegPaperPlane } from "react-icons/fa";
+import { cn } from "react-swisskit";
 
 const itemPerPage = 5;
 
@@ -98,7 +99,9 @@ const ContactTable = ({ data }: TableThreeType) => {
                   <p className="text-black dark:text-white">{item.fullname}</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{item.phone}</p>
+                  <p className="text-black dark:text-white">
+                    {item.phone?.length > 9 ? item.phone : ""}
+                  </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">{item.content}</p>
@@ -140,7 +143,13 @@ const ContactTable = ({ data }: TableThreeType) => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center items-center mt-2">
+      <div
+        className={cn(
+          total > itemPerPage
+            ? "flex justify-center items-center my-2"
+            : "hidden"
+        )}
+      >
         <Pagination
           total={total}
           pageSize={itemPerPage}

@@ -194,8 +194,8 @@ const Table = ({
           </table>
           {data?.length > 0 && isShowAction && (
             <div
-              className={`flex justify-center py-5 md:py-4 S${
-                itemPerPage >= data?.length ? "hidden" : ""
+              className={` justify-center py-5 md:py-4 ${
+                itemPerPage > data?.length ? "!hidden" : "flex"
               }`}
             >
               <Pagination

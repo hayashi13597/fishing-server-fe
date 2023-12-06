@@ -58,12 +58,8 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
             <h3 className="mt-1 md:mt-3">
               <span className="font-medium">Người đăng:</span> {User?.fullname}
             </h3>
-            <div className="mt-1 md:mt-3 line-clamp-3 flex gap-2">
-              <span className="font-medium">Nội dung:</span>{" "}
-              <div dangerouslySetInnerHTML={{ __html: content }}></div>
-            </div>
             <p className="mt-1 md:mt-3 text-sm md:text-base">
-              <span className="font-medium mr-1">Ngày đăng:</span>{" "}
+              <span className="font-medium mr-1">Thời gian đăng:</span>{" "}
               <br className="block md:hidden" /> {formatDateTime(createdAt)}
             </p>
             <p className="mt-1 md:mt-3">
@@ -76,6 +72,12 @@ const NewsModal = ({ closeModal, isModalOpen, selected }: ModalType) => {
                 {visiable ? "Hoạt động" : "Khóa"}
               </span>
             </p>
+            <div className="font-medium">Nội dung:</div>{" "}
+            <div className="mt-1 md:mt-3 line-clamp-3 flex gap-2">
+              <div className="max-h-[20vh] overflow-y-auto">
+                <div dangerouslySetInnerHTML={{ __html: content }}></div>
+              </div>
+            </div>
           </div>
         </div>
       </Modal>

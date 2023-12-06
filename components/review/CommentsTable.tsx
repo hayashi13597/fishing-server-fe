@@ -120,7 +120,7 @@ const ReviewScreen = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center items-center mt-2">
+      <div className="flex justify-center items-center my-2">
         <Pagination
           total={total}
           pageSize={itemPerPage}

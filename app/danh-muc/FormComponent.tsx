@@ -150,7 +150,7 @@ const FormComponent = ({
     multiple: false,
     defaultFileList: selected && [
       {
-        uid: selected?.id.toString(),
+        uid: selected?.id?.toString(),
         name: selected?.name || selected?.title,
         url: selected?.imageUrl,
       },
@@ -294,9 +294,7 @@ const FormComponent = ({
             <Form.Item<FieldType>
               label="Trạng thái"
               name="visiable"
-              initialValue={
-                selected ? (selected?.visible === true ? true : false) : true
-              }
+              initialValue={selected?.visiable || false}
               rules={[
                 { required: true, message: "Trạng thái không được để trống!" },
               ]}

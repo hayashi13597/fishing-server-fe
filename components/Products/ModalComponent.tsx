@@ -59,7 +59,7 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
               </p>
             )}
             <p className="mt-1 md:mt-3 text-sm md:text-base">
-              Ngày đăng: <br className="block md:hidden" />{" "}
+              Thời gian đăng: <br className="block md:hidden" />{" "}
               <span className="font-semibold">{formatDateTime(createdAt)}</span>
             </p>
             <p className="mt-1 md:mt-3 text-sm md:text-base">

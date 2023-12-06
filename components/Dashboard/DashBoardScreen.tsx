@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from "react";
 import CardDataStats from "../CardDataStats";
 import TableTwo from "../Tables/TableTwo";
-
-import products from "@/mock/products.json";
-import users from "@/mock/users.json";
 import Table from "../Users/Table";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -158,7 +155,7 @@ const DashBoardScreen: React.FC = () => {
           link="/san-pham"
         />
         <Table
-          title="Tài khoản mới tạo"
+          title="Quản trị viên"
           data={DataView?.listAccountNew || []}
           isShowAction={false}
         />

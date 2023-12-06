@@ -5,6 +5,9 @@ const ProductsApi = {
   getAll() {
     return apiClient.get(this.path + "admin");
   },
+  getChart() {
+    return apiClient.get(this.path + "chart");
+  },
   getOne(slug: string) {
     return apiClient.get(this.path + slug);
   },

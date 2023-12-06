@@ -97,6 +97,13 @@ const FormComponent = ({
           label="Tên khách hàng"
           name="fullname"
           initialValue={selected?.fullname}
+          rules={[
+            {
+              required: selected?.fullname ? true : false,
+
+              message: "Tên khách hàng không được bỏ trống",
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -104,6 +111,13 @@ const FormComponent = ({
           label="Số điện thoại"
           name="phone"
           initialValue={selected?.phone}
+          rules={[
+            {
+              required: selected?.phone ? true : false,
+              min: 9,
+              message: "Số điện thoại chưa đúng định dạng!",
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -111,6 +125,13 @@ const FormComponent = ({
           label="Địa chỉ"
           name="address"
           initialValue={selected?.address}
+          rules={[
+            {
+              required: selected?.address ? true : false,
+
+              message: "Địa chỉ không được bỏ trống",
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -139,11 +160,17 @@ const FormComponent = ({
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Shipment"
+          label="Phí vận chuyển"
           name="shipping_fee"
+          rules={[
+            {
+              required: true,
+              message: "Phí vận chuyển không được để trống!",
+            },
+          ]}
           initialValue={selected?.shipping_fee}
         >
-          <Input />
+          <Input type="number" />
         </Form.Item>
         <Form.Item<FieldType>
           label="Phương thức thanh toán"

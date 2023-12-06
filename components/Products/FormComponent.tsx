@@ -134,7 +134,7 @@ const FormComponent = ({
     multiple: true,
     defaultFileList: selected && [
       {
-        uid: selected?.id.toString(),
+        uid: selected?.id?.toString(),
         name: selected?.name || selected?.title,
         url: selected?.imageUrl,
       },

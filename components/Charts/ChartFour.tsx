@@ -1,7 +1,9 @@
 "use client";
 import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import ProductsApi from "@/api-client/product";
+import LoadingContainer from "../common/LoadingContainer";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface ChartFourState {
@@ -9,26 +11,36 @@ interface ChartFourState {
 }
 
 const ChartFour: React.FC = () => {
+  const [isLoadding, setLoading] = useState(false);
+  useEffect(() => {
+    ProductsApi.getChart()
+      .then((res: any) => {
+        if (res?.data.listTotal) {
+          updateState(res.data.listTotal);
+        }
+      })
+      .finally(() => {
+        setLoading(() => true);
+      });
+  }, []);
   const [state, setState] = useState<ChartFourState>({
     series: [
       {
-        data: [
-          168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112, 123, 212,
-          270, 190, 310, 115, 90, 380, 112, 223, 292, 170, 290, 110, 115, 290,
-          380, 312,
-        ],
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       },
     ],
   });
 
   // Update the state
-  const updateState = () => {
-    setState((prevState) => ({
-      ...prevState,
-      // Update the desired properties
+  const updateState = (data) => {
+    setState(() => ({
+      series: [
+        {
+          data,
+        },
+      ],
     }));
   };
-  updateState;
 
   const options: ApexOptions = {
     colors: ["#3C50E0"],
@@ -57,38 +69,7 @@ const ChartFour: React.FC = () => {
       colors: ["transparent"],
     },
     xaxis: {
-      categories: [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "29",
-        "30",
-      ],
+      categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 11, 12],
       axisBorder: {
         show: false,
       },
@@ -136,18 +117,22 @@ const ChartFour: React.FC = () => {
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
       <div>
         <h3 className="text-xl font-semibold text-black dark:text-white">
-          Visitors Analytics
+          Doanh thu tạm tính 12 tháng
         </h3>
       </div>
 
       <div className="mb-2">
         <div id="chartFour" className="-ml-5">
-          <ApexCharts
-            options={options}
-            series={state.series}
-            type="bar"
-            height={350}
-          />
+          {!isLoadding ? (
+            <></>
+          ) : (
+            <ApexCharts
+              options={options}
+              series={state.series}
+              type="bar"
+              height={350}
+            />
+          )}
         </div>
       </div>
     </div>

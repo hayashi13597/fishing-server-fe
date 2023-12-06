@@ -6,6 +6,7 @@ import { formatMoney } from "@/utils";
 import products from "@/mock/products.json";
 import OrderApi from "@/api-client/order";
 import { CiTrash } from "react-icons/ci";
+import { cn } from "react-swisskit";
 
 type ModalType = {
   closeModal?: () => void;
@@ -63,14 +64,14 @@ const OrderModal = ({
         title={`Thông tin đơn hàng #${codebill}`}
         open={isModalOpen}
         onCancel={closeModal}
-        width={800}
+        width={900}
         footer={[
           <Button key="back" onClick={closeModal}>
             Đóng
           </Button>,
         ]}
       >
-        <div className="max-w-full overflow-x-auto">
+        <div className="max-w-full overflow-x-auto overflow-y-hidden">
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -158,17 +159,21 @@ const OrderModal = ({
               </td>
             </tfoot>
           </table>
-          {listOrderDetail.length > itemPerPage && (
-            <div className="flex justify-center mt-2">
-              <Pagination
-                defaultCurrent={1}
-                total={listOrderDetail.length}
-                pageSize={itemPerPage}
-                current={pageCurrentModal}
-                onChange={(page) => setPageCurrentModal(page)}
-              />
-            </div>
-          )}
+
+          <div
+            className={cn(
+              " justify-center mt-2",
+              total > itemPerPage ? "flex" : "hidden"
+            )}
+          >
+            <Pagination
+              defaultCurrent={1}
+              total={listOrderDetail.length}
+              pageSize={itemPerPage}
+              current={pageCurrentModal}
+              onChange={(page) => setPageCurrentModal(page)}
+            />
+          </div>
         </div>
       </Modal>
     </>

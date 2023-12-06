@@ -3,22 +3,17 @@ export function formatMoney(price: number) {
   if (isNaN(price)) {
     return price;
   }
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
+  return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
 }
 export function formatNumber(quantity: number) {
-  if (quantity >= 1000) return `${quantity / 1000} +K`;
+  if (quantity >= 1000) return `${quantity / 1000} K`;
   else if (quantity >= 1000000) return `${(quantity / 1000000).toFixed(1)} M`;
   else if (quantity >= 1000000000)
     return `${(quantity / 1000000000).toFixed(1)} B`;
   return quantity;
 }
 export function formatDateTime(date: string) {
-  return new Date(date).toLocaleDateString("vi-VN", {
-    weekday: "long",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return moment(date).format("HH:mm:ss - DD/MM/YYYY");
 }
 export function isTimeEnd(timecreate: string) {
   return new Date(timecreate).getTime() - new Date(Date.now()).getTime() > 0;

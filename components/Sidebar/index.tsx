@@ -49,11 +49,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   });
 
   useEffect(() => {
-    localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
-    if (sidebarExpanded) {
-      document.querySelector("body")?.classList.add("sidebar-expanded");
-    } else {
-      document.querySelector("body")?.classList.remove("sidebar-expanded");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sidebar-expanded", sidebarExpanded?.toString());
+      if (sidebarExpanded) {
+        document.querySelector("body")?.classList.add("sidebar-expanded");
+      } else {
+        document.querySelector("body")?.classList.remove("sidebar-expanded");
+      }
     }
   }, [sidebarExpanded]);
 
@@ -141,7 +143,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       fill=""
                     />
                   </svg>
-                  Dashboard
+                  Bảng điều kiển
                 </Link>
               </li>
               {/* <!-- Dashboard --> */}
@@ -354,19 +356,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </ul>
           </div>
 
-          {/* <!-- Others Group --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               Khác
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* <!-- Menu Item Chart --> */}
               <li>
                 <Link
-                  href="/chart"
+                  href="/bieu-do"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes("chart") && "bg-graydark dark:bg-meta-4"
+                    pathname.includes("bieu-do") && "bg-graydark dark:bg-meta-4"
                   }`}
                 >
                   <svg
@@ -401,11 +401,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Biểu đồ
                 </Link>
               </li>
-              {/* <!-- Menu Item Chart --> */}
             </ul>
           </div>
         </nav>
-        {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>
   );

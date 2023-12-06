@@ -112,7 +112,7 @@ const UserForm = ({
         >
           <Select placeholder="Hãy chọn vài trò" allowClear>
             <Option value="admin">Admin</Option>
-            <Option value="manager">Manager</Option>
+
             <Option value="member">Member</Option>
           </Select>
         </Form.Item>

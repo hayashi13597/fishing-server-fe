@@ -75,7 +75,7 @@ const CateGoriTable = ({
         });
     }
   };
-
+  console.log(itemPerPage, data?.length);
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -209,8 +209,8 @@ const CateGoriTable = ({
         </table>
         {data?.length > 0 && (
           <div
-            className={`flex justify-center py-5 md:py-4 S${
-              itemPerPage >= data?.length ? "hidden" : ""
+            className={` justify-center py-5 md:py-4 ${
+              itemPerPage > data?.length ? "!hidden" : "flex"
             }`}
           >
             <Pagination

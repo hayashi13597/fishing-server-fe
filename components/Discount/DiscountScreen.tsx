@@ -11,6 +11,7 @@ import DiscountApi from "@/api-client/discount";
 import AddDiscount from "./FormComponent";
 import { SearchProps } from "antd/es/input";
 import Search from "antd/es/input/Search";
+import { cn } from "react-swisskit";
 
 const itemPerPage = 5;
 
@@ -165,7 +166,12 @@ const DiscountScreen = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center items-center mt-2">
+      <div
+        className={cn(
+          " justify-center items-center my-2",
+          total > itemPerPage ? "flex" : "hidden"
+        )}
+      >
         <Pagination
           total={total}
           pageSize={itemPerPage}

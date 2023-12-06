@@ -2,6 +2,11 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import React from "react";
 
 import CommentsTable from "@/components/review/CommentsTable";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Đánh giá",
+};
 
 const ReviewScreen = () => {
   return (

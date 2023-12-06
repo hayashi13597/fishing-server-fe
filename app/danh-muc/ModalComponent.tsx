@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Modal } from "antd";
 import Image from "next/image";
 import { formatDateTime, formatMoney } from "@/utils";
+import { cn } from "react-swisskit";
 
 type ModalType = {
   closeModal?: () => void;
@@ -10,8 +11,15 @@ type ModalType = {
 };
 
 const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
-  const { name, price, imageUrl, categoryId, createdAt, visible, description } =
-    selected;
+  const {
+    name,
+    price,
+    imageUrl,
+    categoryId,
+    createdAt,
+    visiable = true,
+    description,
+  } = selected;
 
   return (
     <>
@@ -59,12 +67,20 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
               </p>
             )}
             <p className="mt-1 md:mt-3 text-sm md:text-base">
-              Ngày đăng: <br className="block md:hidden" />{" "}
+              Thời gian đăng: <br className="block md:hidden" />{" "}
               <span className="font-semibold">{formatDateTime(createdAt)}</span>
             </p>
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Trạng thái:{" "}
-              <span className="font-semibold"> {visible ? "Hiện" : "Ẩn"}</span>
+              <span
+                className={cn(
+                  "inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium",
+                  visiable ? "text-success bg-success" : "text-danger bg-danger"
+                )}
+              >
+                {" "}
+                {visiable ? "Hiện" : "Ẩn"}
+              </span>
             </p>
           </div>
         </div>

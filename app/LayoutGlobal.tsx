@@ -1,3 +1,4 @@
+"use client";
 import { handleAttachToken } from "@/api-client";
 import CategoriApi from "@/api-client/category";
 import cookieClient from "@/api-client/cookie";
@@ -12,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 const LayoutGlobal = () => {
   const dispatch: AppDispatch = useDispatch();
   const account = useSelector((state: RootState) => state.account.account);
-
+  const router = useRouter();
   useEffect(() => {
     const accessToken = cookieClient.get("accessToken");
     if (accessToken) {
@@ -28,7 +29,10 @@ const LayoutGlobal = () => {
     });
   }, [account.id]);
   if (account.id && account.role !== "member") {
+    router.push("/");
     return <></>;
+  } else {
+    return router.push("/dang-nhap");
   }
   return (
     <div className="fixed inset-0 bg-black z-[10] flex">

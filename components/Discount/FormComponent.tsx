@@ -82,7 +82,7 @@ const AddDiscount = ({
         className="mt-5"
       >
         <Form.Item<FieldType>
-          label="Giá trị"
+          label="Giá trị (%)"
           name="value"
           rules={[
             {
@@ -104,7 +104,7 @@ const AddDiscount = ({
           label="Thời hạn"
           name="expirydate"
         >
-          <Input type="datetime-local" />
+          <Input type="date" />
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 23, style: { alignItems: "end" } }}>

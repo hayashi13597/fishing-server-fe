@@ -111,7 +111,7 @@ const FormComponent = ({ isOpen, closeModal, selected }: FormComponentType) => {
           <Input type="text" />
         </Form.Item>
 
-        <Form.Item label="[ocdaocauca]Trả lời liên hệ">
+        <Form.Item label="Trả lời liên hệ">
           <EditorContent text={content} setText={setContent} title="content" />
         </Form.Item>
         <Form.Item wrapperCol={{ span: 23, style: { alignItems: "end" } }}>

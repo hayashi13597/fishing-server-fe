@@ -4,6 +4,7 @@ import { cn } from "react-swisskit";
 import ImageItem from "./ImageItem";
 import UploadImageApi from "@/api-client/uploadfile";
 import { message } from "antd";
+import LoadingContainer from "../common/LoadingContainer";
 
 interface ImageContainer {
   listImage: IImage[];
@@ -15,8 +16,9 @@ export interface IImage {
 }
 const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
   const [isHidden, setIsHidden] = useState(false);
-
+  const [isLoadding, setIsLoading] = useState(false);
   const handleDeletefile = (idPath: string) => {
+    setIsLoading(() => true);
     UploadImageApi.delete(idPath)
       .then(() => {
         message.success("Xóa ảnh thành công");
@@ -26,6 +28,9 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
       })
       .catch(() => {
         message.error("Xóa ảnh  thất bại");
+      })
+      .finally(() => {
+        setIsLoading(() => false);
       });
   };
   const handleUpload = (e: any) => {
@@ -33,6 +38,7 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
+      setIsLoading(() => true);
       UploadImageApi.add(formData)
         .then((res: any) => {
           message.success("Tải ảnh thành công");
@@ -44,11 +50,15 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
         })
         .catch(() => {
           message.error("Tải ảnh thất bại");
+        })
+        .finally(() => {
+          setIsLoading(() => false);
         });
     }
   };
   return (
-    <div className={cn(`relative z-50  my-4 min-h-[40px]`)}>
+    <div className={cn(`relative z-50  my-4  min-h-[40px]`)}>
+      {isLoadding && <LoadingContainer />}
       <button
         type="button"
         onClick={() => setIsHidden(!isHidden)}
@@ -60,7 +70,7 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
         <div className="flex my-8 ">
           <label
             htmlFor="uploadContentImage"
-            className="m-auto w-32 h-32w-32 p-4 border-dashed  border text-center cursor-pointer "
+            className="m-auto w-32 h-32w-32 p-2 border-dashed  border text-center cursor-pointer "
           >
             Tải ảnh lên
           </label>
@@ -71,7 +81,7 @@ const ImageContainer = ({ setListImage, listImage }: ImageContainer) => {
           type="file"
           className="!hidden"
         />
-        <div className="grid md:grid-cols-3 grid-cols-2">
+        <div className="grid md:grid-cols-3 grid-cols-2 p-4">
           {listImage.map((item) => (
             <ImageItem
               imageUrl={item.imageUrl}

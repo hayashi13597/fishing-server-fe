@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Validator } from "react-swisskit";
@@ -13,8 +13,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
+import LoadingContainer from "../common/LoadingContainer";
 
 const LoginContent = () => {
+  const [isLoadding, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -32,6 +34,7 @@ const LoginContent = () => {
         .required("Mật khẩu không được để trống!"),
     }),
     onSubmit: (values) => {
+      setIsLoading(true);
       UserApi.login(values)
         .then((res: any) => {
           if (res.data?.account?.id) {
@@ -43,12 +46,16 @@ const LoginContent = () => {
         })
         .catch((res) => {
           message.error(res?.message || "Đăng nhập Thất bại");
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     },
   });
 
   return (
     <div className="fixed inset-0 bg-black z-[10] flex">
+      {isLoadding && <LoadingContainer />}
       <div className="w-full z-10">
         <Head>Đăng nhập</Head>
         <div className="rounded-sm h-screen border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">

@@ -15,25 +15,30 @@ const LayoutGlobal = () => {
   const account = useSelector((state: RootState) => state.account.account);
   const router = useRouter();
   useEffect(() => {
-    const accessToken = cookieClient.get("accessToken");
-    if (accessToken) {
-      handleAttachToken(accessToken);
-      dispatch(FetchFirstLoginWithToken()).catch((res) => {
-        message.error(res?.message || "Bạn không phải là admin");
+    if (typeof window !== "undefined") {
+      const accessToken = cookieClient.get("accessToken");
+      if (accessToken) {
+        handleAttachToken(accessToken);
+        dispatch(FetchFirstLoginWithToken()).catch((res) => {
+          message.error(res?.message || "Bạn không phải là admin");
+        });
+      }
+
+      // share dữ liệu cataegoris
+      CategoriApi.getAll().then((res) => {
+        dispatch(UploadCategory(res.data.categories));
       });
     }
-
-    // share dữ liệu cataegoris
-    CategoriApi.getAll().then((res) => {
-      dispatch(UploadCategory(res.data.categories));
-    });
   }, [account.id]);
+
   if (account.id && account.role !== "member") {
     router.push("/");
     return <></>;
-  } else {
-    return router.push("/dang-nhap");
   }
+
+  // else {
+  //   router.push("/dang-nhap");
+  // }
   return (
     <div className="fixed inset-0 bg-black z-[10] flex">
       <LoginContent />

@@ -1,3 +1,4 @@
+"use client";
 import { checkImageExist } from "@/utils";
 import { Skeleton, message } from "antd";
 import Image from "next/image";
@@ -11,6 +12,7 @@ const ImageItem: React.FC<{
   handleDeletefile?: (path: string) => void;
   setListInmage: (prev: any) => any;
 }> = ({ imageUrl, path, handleDeletefile, setListInmage }) => {
+  console.log("imageUrl, path,", imageUrl, path);
   const [isLoadding, setIsloadding] = useState(true);
   const [isHidden, setIsHidden] = useState(false);
   const handleCopy = (kind: number) => {
@@ -27,18 +29,11 @@ const ImageItem: React.FC<{
   const divRef = useRef<HTMLDivElement>(null);
 
   const handleHideBox = () => {
-    if (path) {
-      setListInmage(
-        (prev: any) => prev.filter((item: any) => item.path != path) || [prev]
-      );
-      return;
-    }
     if (divRef.current) {
       divRef.current.classList.add("hidden");
       setListInmage(
-        (prev: any) => prev.filter((item: any) => item != imageUrl) || [prev]
+        (prev: any) => prev.filter((item: any) => item != imageUrl) || prev
       );
-      message.success("Xóa thành công!");
     }
   };
   const handleDeleteUpLoadImage = () => {
@@ -72,7 +67,7 @@ const ImageItem: React.FC<{
     <div ref={divRef} className="border p-4 relative">
       <button
         onClick={handleHideBox}
-        className="absolute -top-3 -right-3 bg-primary  hover:opacity-75 text-white rounded-full border px-3"
+        className="absolute -top-3 -right-3 bg-red-400  hover:bg-red-600 text-white rounded-full border px-3"
         type="button"
       >
         X
@@ -89,7 +84,7 @@ const ImageItem: React.FC<{
         <button
           onClick={() => handleCopy(2)}
           type="button"
-          className="py-2 px-3 cursor-pointer sm:w-32 mt-2 text-sm rounded-full bg-yellow-600 hover:bg-yellow-800"
+          className="py-2 px-3 cursor-pointer sm:w-32 mt-2 text-sm rounded-full bg-green-800  hover:bg-green-600 text-white"
         >
           Sao chép
         </button>
@@ -120,7 +115,7 @@ const ImageItem: React.FC<{
           <button
             type="button"
             onClick={handleDeleteUpLoadImage}
-            className="py-2 px-3 cursor-pointer sm:w-32 mt-2 text-sm rounded-full bg-red-600 hover:bg-red-800 "
+            className="py-2 px-3 cursor-pointer sm:w-32 mt-2 text-sm rounded-full bg-red-800 hover:bg-red-600 text-white"
           >
             Xóa Ảnh
           </button>

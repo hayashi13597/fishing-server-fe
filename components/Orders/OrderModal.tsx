@@ -172,6 +172,7 @@ const OrderModal = ({
               pageSize={itemPerPage}
               current={pageCurrentModal}
               onChange={(page) => setPageCurrentModal(page)}
+                showSizeChanger={false}
             />
           </div>
         </div>

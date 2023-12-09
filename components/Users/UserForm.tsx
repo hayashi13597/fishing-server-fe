@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, Input, Modal, Select, message } from "antd";
 import UserApi from "@/api-client/user";
+import NoticeApi from "@/api-client/notice";
+import { Debounced } from "react-swisskit";
 const { Option } = Select;
 
 type FieldType = {
@@ -56,6 +58,20 @@ const UserForm = ({
       .then((res: any) => {
         message.success(res.message);
 
+        closeModal && closeModal();
+      })
+      .catch((err) => {
+        message.error(err?.message);
+      });
+  };
+  const handleDeleteNotice = () => {
+    if (!selected.id) {
+      message.error("Vui lòng mở lại thông tin user");
+      return;
+    }
+    NoticeApi.DeleteOne(selected.id)
+      .then((res: any) => {
+        message.success(res.message);
         closeModal && closeModal();
       })
       .catch((err) => {
@@ -134,7 +150,14 @@ const UserForm = ({
         </Form.Item>
         <Form.Item wrapperCol={{ span: 23, style: { alignItems: "end" } }}>
           <button
-            onClick={handleResetPassword}
+            onClick={Debounced(handleDeleteNotice, 200)}
+            className="inline-flex items-center justify-center rounded-md bg-success py-2.5 px-10 mr-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            type="button"
+          >
+            Xóa thông báo
+          </button>
+          <button
+            onClick={Debounced(handleResetPassword, 200)}
             className="inline-flex items-center justify-center rounded-md bg-meta-1 py-2.5 px-10 mr-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             type="button"
           >

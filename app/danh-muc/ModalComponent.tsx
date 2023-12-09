@@ -10,12 +10,15 @@ type ModalType = {
   isModalOpen?: boolean;
 };
 
-const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
+const ModalComponent = ({
+  closeModal,
+  isModalOpen,
+  selected = {},
+}: ModalType) => {
   const {
     name,
     price,
     imageUrl,
-    categoryId,
     createdAt,
     visiable = true,
     description,
@@ -51,21 +54,12 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
             <p className="mt-1 md:mt-3 font-medium text-lg text-meta-1">
               {formatMoney(price)}
             </p>
-            <p className="mt-1 md:mt-3 line-clamp-3">{description}</p>
-            {categoryId && (
-              <p className="mt-1 md:mt-3 text-sm md:text-base">
-                Danh mục:{" "}
-                <span className="font-semibold">
-                  {categoryId === 1
-                    ? "Cần câu"
-                    : categoryId === 2
-                    ? "Mồi câu"
-                    : categoryId === 3
-                    ? "Món nhậu"
-                    : "Đồ uống"}
-                </span>
-              </p>
-            )}
+            <p className="mt-1 md:mt-3 line-clamp-3">
+              Nội dung : {description}
+            </p>
+            <p className="mt-1 md:mt-3 text-sm md:text-base">
+              Danh mục: <span className="font-semibold capitalize">{name}</span>
+            </p>
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Thời gian đăng: <br className="block md:hidden" />{" "}
               <span className="font-semibold">{formatDateTime(createdAt)}</span>

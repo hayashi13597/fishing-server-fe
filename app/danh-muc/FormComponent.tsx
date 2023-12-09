@@ -89,7 +89,7 @@ const FormComponent = ({
       CategoriApi.add(dataUpload)
         .then((res: any) => {
           setData((prev: any[]) => {
-            const newListCates = [...prev, res.data.category];
+            const newListCates = [res.data.category, ...prev];
             dispatch(UploadCategory(newListCates));
 
             return newListCates;
@@ -294,7 +294,7 @@ const FormComponent = ({
             <Form.Item<FieldType>
               label="Trạng thái"
               name="visiable"
-              initialValue={selected?.visiable || false}
+              initialValue={selected?.visiable || true}
               rules={[
                 { required: true, message: "Trạng thái không được để trống!" },
               ]}

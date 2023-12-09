@@ -227,6 +227,7 @@ const Table = ({ title, data, isShow = true, setData }: TableThreeType) => {
               pageSize={itemPerPage}
               current={pageCurrent}
               onChange={(page) => setPageCurrent(page)}
+              showSizeChanger={false}
             />
           </div>
         )}

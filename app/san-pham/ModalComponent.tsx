@@ -81,7 +81,7 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
             <p className="mt-1 md:mt-3 font-medium text-lg text-meta-1">
               {formatMoney(price)}
             </p>
-            <p className="mt-1 md:mt-3 line-clamp-3">{description}</p>
+            <p className="mt-1 md:mt-3 line-clamp-3"> Mô tả: {description}</p>
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Danh mục:{" "}
               <span className="font-semibold capitalize">

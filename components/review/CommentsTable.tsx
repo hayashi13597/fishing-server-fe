@@ -126,6 +126,7 @@ const ReviewScreen = () => {
           pageSize={itemPerPage}
           current={pageCurrent}
           onChange={(page) => setPageCurrent(page)}
+            showSizeChanger={false}
         />
       </div>
     </div>

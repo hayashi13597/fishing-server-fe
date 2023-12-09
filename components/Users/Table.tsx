@@ -8,6 +8,8 @@ import Link from "next/link";
 import UserApi from "@/api-client/user";
 import { SearchProps } from "antd/es/input";
 import Search from "antd/es/input/Search";
+import NoticeApi from "@/api-client/notice";
+import { Debounced } from "react-swisskit";
 const itemPerPage: number = 5;
 
 type TableThreeType = {
@@ -67,6 +69,16 @@ const Table = ({
       });
     });
   };
+
+  const handleDeleteNotice = () => {
+    NoticeApi.DeleteAll()
+      .then((res: any) => {
+        message.success(res.message);
+      })
+      .catch((err) => {
+        message.error(err?.message);
+      });
+  };
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -75,9 +87,18 @@ const Table = ({
             <h4 className="text-xl font-semibold text-black dark:text-white">
               {title || "Latest User"}
             </h4>
-            <Link href={"/tai-khoan"} className="hover:text-primary">
-              Xem tất cả
-            </Link>
+            <div className="flex gap-2">
+              <button
+                onClick={Debounced(handleDeleteNotice, 1000)}
+                className="  hover:text-primary "
+                type="button"
+              >
+                Xóa tất cả thông báo
+              </button>
+              <Link href={"/tai-khoan"} className="hover:text-primary">
+                Xem tất cả
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="py-5 max-w-[300px]">
@@ -204,6 +225,7 @@ const Table = ({
                 pageSize={itemPerPage}
                 current={pageCurrent}
                 onChange={(page) => setPageCurrent(page)}
+                showSizeChanger={false}
               />
             </div>
           )}

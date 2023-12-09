@@ -8,11 +8,12 @@ import Head from "next/head";
 
 const Category = () => {
   const listCate = useSelector((state: RootState) => state.cate.listCate);
+  const acccount = useSelector((state: RootState) => state.account.account);
   const [listCategories, setCategories] = useState(listCate);
 
   useEffect(() => {
     setCategories(() => listCate);
-  }, [listCate.length]);
+  }, [listCate.length, acccount.id]);
   return (
     <>
       <Breadcrumb pageName="Danh mục" />

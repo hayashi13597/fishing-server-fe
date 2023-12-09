@@ -219,6 +219,7 @@ const CateGoriTable = ({
               pageSize={itemPerPage}
               current={pageCurrent}
               onChange={(page) => setPageCurrent(page)}
+              showSizeChanger={false}
             />
           </div>
         )}

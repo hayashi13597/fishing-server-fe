@@ -32,7 +32,6 @@ const LayoutGlobal = () => {
   }, [account.id]);
 
   if (account.id && account.role !== "member") {
-    router.push("/");
     return <></>;
   }
 

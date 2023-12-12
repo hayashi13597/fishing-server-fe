@@ -13,6 +13,9 @@ const Category = () => {
 
   useEffect(() => {
     setCategories(() => listCate);
+     if (typeof window !== "undefined") {
+       document.title = "Quản lý Danh mục";
+     }
   }, [listCate.length, acccount.id]);
   return (
     <>

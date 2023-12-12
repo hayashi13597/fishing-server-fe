@@ -7,10 +7,16 @@ import ChartFour from "@/components/Charts/ChartFour";
 import { RootState } from "@/redux/store";
 
 import Head from "next/head";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const ChartDashboard = () => {
   const account = useSelector((state: RootState) => state.account.account);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      document.title = "Quản lý Biểu đồ hàng hóa";
+    }
+  }, []);
   return (
     <>
       <Breadcrumb pageName="Biểu đồ doanh thu" />

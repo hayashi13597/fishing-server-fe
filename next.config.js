@@ -43,6 +43,7 @@ const nextConfig = {
 
   env: {
     DOMAIN_SERVER: process.env.DOMAIN_SERVER,
+    DOMAIN_URL: process.env.DOMAIN_URL,
   },
 };
 

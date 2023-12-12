@@ -11,6 +11,9 @@ const Products = () => {
   const [products, setListProduct] = useState([]);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      document.title = "Quản lý Sản phẩm";
+    }
     ProductsApi.getAll().then((res) => {
       setListProduct(res.data.products);
     });

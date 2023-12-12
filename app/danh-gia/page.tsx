@@ -5,7 +5,7 @@ import CommentsTable from "@/components/review/CommentsTable";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Đánh giá",
+  title: "Quản lý Đánh giá",
 };
 
 const ReviewScreen = () => {

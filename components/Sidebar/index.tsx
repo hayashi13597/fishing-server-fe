@@ -5,6 +5,9 @@ import SidebarLinkGroup from "./SidebarLinkGroup";
 import Image from "next/image";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaRegCalendarAlt, FaRegComment, FaSketch } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { cn } from "react-swisskit";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -58,13 +61,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       }
     }
   }, [sidebarExpanded]);
+  const account = useSelector((state: RootState) => state.account.account);
 
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 md:z-[-1] z-[9999] flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
+      className={cn(
+        "absolute left-0 top-0    flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full",
+        account.role == "admin" ? "z-10" : ""
+      )}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">

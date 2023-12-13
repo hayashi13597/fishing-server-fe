@@ -7,6 +7,10 @@ import NewApi from "@/api-client/new/";
 const NewsAndEvents = () => {
   const [ListNews, setListNews] = useState([]);
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      document.title = "Quản lý tin tức";
+    }
+
     NewApi.GetAll().then((res) => {
       setListNews(() => res.data.events);
     });

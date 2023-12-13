@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Quản lý hóa đơn",
 };
 if (typeof window !== "undefined") {
-  document.title = "Quản lý Sản phẩm";
+  document.title = "Quản lý hóa đơn";
 }
 const Orders = () => {
   return (

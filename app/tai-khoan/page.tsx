@@ -9,6 +9,9 @@ const UserAccount = () => {
   const [listAccount, setListAccount] = useState([]);
   const account = useSelector((state: RootState) => state.account.account);
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      document.title = "Quản lý tài khoản";
+    }
     if (account.id) {
       UserApi.GetAll().then((res) => {
         setListAccount(() => res.data.accounts);

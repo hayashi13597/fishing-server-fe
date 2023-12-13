@@ -8,6 +8,7 @@ import { RenderExpired, formatDateTime } from "@/utils";
 import DiscountApi from "@/api-client/discount";
 import { FaStar } from "react-icons/fa";
 import ReviewApi from "@/api-client/review";
+import { cn } from "react-swisskit";
 
 const itemPerPage = 5;
 
@@ -120,13 +121,18 @@ const ReviewScreen = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center items-center my-2">
+      <div
+        className={cn(
+          " justify-center items-center my-2",
+          total > itemPerPage ? "flex" : "!hidden"
+        )}
+      >
         <Pagination
           total={total}
           pageSize={itemPerPage}
           current={pageCurrent}
           onChange={(page) => setPageCurrent(page)}
-            showSizeChanger={false}
+          showSizeChanger={false}
         />
       </div>
     </div>

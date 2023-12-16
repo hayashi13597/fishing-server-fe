@@ -123,6 +123,7 @@ const FormComponent = ({
         name,
         price,
         user_id: account.id,
+        sale_off: saleoff,
         selloff: saleoff,
         visiable,
         listSubimages: JSON.stringify(ListImageUpdate),
@@ -156,6 +157,7 @@ const FormComponent = ({
         description,
         name,
         price,
+        sale_off: saleoff,
         selloff: saleoff,
         visiable,
         category_id: categoryId,
@@ -307,7 +309,7 @@ const FormComponent = ({
           rules={[{ required: true, message: "Danh mục không được để trống!" }]}
         >
           <Select
-            value={`Chon danh much`}
+            value={`Chọn danh mục`}
             placeholder="Hãy chọn danh mục"
             allowClear
           >
@@ -322,7 +324,7 @@ const FormComponent = ({
         <Form.Item<FieldType>
           label="Giảm giá"
           name="saleoff"
-          initialValue={0}
+          initialValue={selected?.sale_off || 0}
           rules={[{ required: true, message: "Giả giá không được để trống!" }]}
         >
           <Select

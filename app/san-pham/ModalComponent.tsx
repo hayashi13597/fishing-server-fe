@@ -20,6 +20,7 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
     visiable,
     description,
     content,
+    sale_off = 0,
   } = selected;
 
   let ListImage: any = [];
@@ -88,9 +89,14 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
                 {selected?.Category?.name}
               </span>
             </p>
+
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Thời gian đăng: <br className="block md:hidden" />{" "}
               <span className="font-semibold">{formatDateTime(createdAt)}</span>
+            </p>
+            <p className="mt-1 md:mt-3 text-sm md:text-base">
+              Giảm giá: <br className="block md:hidden" />{" "}
+              <span className="font-semibold">{sale_off}%</span>
             </p>
             <p className="mt-1 md:mt-3 text-sm md:text-base">
               Trạng thái:{" "}

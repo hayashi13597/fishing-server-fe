@@ -205,7 +205,7 @@ const FormComponent = ({
       }
       const FormDataFile = new FormData();
       FormDataFile.append("file", file);
-
+      setIsLoadding(() => true);
       UploadImageApi.add(FormDataFile)
         .then((res: any) => {
           setListSubImage((prev) => [
@@ -216,6 +216,9 @@ const FormComponent = ({
         })
         .catch(() => {
           message.error("Tải ảnh  sản phẩm thất bại");
+        })
+        .finally(() => {
+          setIsLoadding(() => false);
         });
       return false;
     },

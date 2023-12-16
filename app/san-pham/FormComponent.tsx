@@ -102,6 +102,7 @@ const FormComponent = ({
       saleoff,
       visiable = true,
     } = values;
+
     const { url = "", uid = "" } = listSubImage[0];
     if (type == "add") {
       if (listSubImage.length < 1) {
@@ -122,7 +123,7 @@ const FormComponent = ({
         name,
         price,
         user_id: account.id,
-        saleoff,
+        selloff: saleoff,
         visiable,
         listSubimages: JSON.stringify(ListImageUpdate),
         content: text,
@@ -155,7 +156,7 @@ const FormComponent = ({
         description,
         name,
         price,
-        saleoff,
+        selloff: saleoff,
         visiable,
         category_id: categoryId,
         imageUrl: url,

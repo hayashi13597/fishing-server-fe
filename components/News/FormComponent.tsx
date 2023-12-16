@@ -10,6 +10,7 @@ import NewApi from "@/api-client/new";
 import moment from "moment";
 import EditorContent from "@/app/san-pham/EditorContent";
 import ImageContainer from "../ImageContainer";
+import LoadingContainer from "../common/LoadingContainer";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -83,6 +84,7 @@ const FormComponent = ({
     };
     // chưa có login nên user_id default=2
     if (type == "add") {
+      setLoading(() => true);
       NewApi.Create(dataUpload)
         .then((res: any) => {
           message.success(res.message);
@@ -95,6 +97,9 @@ const FormComponent = ({
         })
         .catch((err) => {
           message.error(err.message);
+        })
+        .finally(() => {
+          setLoading(() => false);
         });
     } else {
       if (!selected?.id) {
@@ -106,7 +111,7 @@ const FormComponent = ({
         return;
       }
       dataUpload.id = selected.id;
-
+      setLoading(() => true);
       NewApi.Edit(dataUpload)
         .then((res: any) => {
           setData((prev: any[]) => {
@@ -121,6 +126,9 @@ const FormComponent = ({
         })
         .catch((res) => {
           message.error(res?.message);
+        })
+        .finally(() => {
+          setLoading(() => false);
         });
     }
   };
@@ -149,15 +157,20 @@ const FormComponent = ({
       }
       const FormDataFile = new FormData();
       FormDataFile.append("file", file);
-      message.success("Hãy đợi xíu nhé ảnh đang tải ");
-      UploadImageApi.add(FormDataFile).then((res: any) => {
-        setDataSubmit((prev) => ({
-          ...prev,
-          idPath: res.idPath,
-          imageUrl: res.imageUrl,
-        }));
-        message.success("Tải ảnh thành công bạn có thể tiếp tục ");
-      });
+
+      setLoading(() => true);
+      UploadImageApi.add(FormDataFile)
+        .then((res: any) => {
+          setDataSubmit((prev) => ({
+            ...prev,
+            idPath: res.idPath,
+            imageUrl: res.imageUrl,
+          }));
+          message.success("Tải ảnh thành công bạn có thể tiếp tục ");
+        })
+        .finally(() => {
+          setLoading(() => false);
+        });
       return false;
     },
     onRemove() {
@@ -173,7 +186,7 @@ const FormComponent = ({
       authorization: "Token",
     },
   };
-  console.log(selected);
+  const [isLoading, setLoading] = useState(false);
   return (
     <Modal
       title={`${type === "add" ? "Thêm" : "Sửa"} ${title}`}
@@ -184,6 +197,7 @@ const FormComponent = ({
       width={800}
       footer={<></>}
     >
+      {isLoading && <LoadingContainer />}
       <Form
         name="formComponent"
         form={form}

@@ -42,11 +42,7 @@ const OrderModal = ({
       );
     });
   }, [codebill, id, shipping_fee, isDelete]);
-  const handleDeleteOrderDetail = (orderDetailId: number, status: string) => {
-    if (orderDetailId && status == "s4") {
-      message.success("Bạn không thể xóa đơn hàng đã giao thành công");
-      return;
-    }
+  const handleDeleteOrderDetail = (orderDetailId: number) => {
     orderDetailId &&
       OrderApi.DeleteOrderDetail(orderDetailId)
         .then((res: any) => {
@@ -139,9 +135,7 @@ const OrderModal = ({
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <Popconfirm
                         title="Bạn có chắc muốn xóa không?"
-                        onConfirm={() =>
-                          handleDeleteOrderDetail(order.id, selected?.status)
-                        }
+                        onConfirm={() => handleDeleteOrderDetail(order.id)}
                         okText="Xác nhận"
                         cancelText="Hủy"
                         okType="danger"

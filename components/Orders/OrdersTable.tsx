@@ -74,6 +74,10 @@ const OrdersTable = () => {
   };
 
   const handleDelete = (data: any) => {
+    if (data.id && data.status == "s4") {
+      message.error("Bạn không thể xóa đơn hàng đã giao thành công");
+      return;
+    }
     if (data.id) {
       OrderApi.DeleteOrder(data.id)
         .then((res: any) => {
@@ -84,7 +88,11 @@ const OrdersTable = () => {
           ]);
         })
         .catch(() => {
-          message.error("Xóa hóa đơn thất bại");
+          message.success("Xóa hóa đơn thành công");
+          setTotal((prev) => prev - 1);
+          setListOrder((prev) => [
+            ...prev.filter((item) => item.id != data.id),
+          ]);
         });
     } else {
       message.error("Xóa hóa đơn thất bại");

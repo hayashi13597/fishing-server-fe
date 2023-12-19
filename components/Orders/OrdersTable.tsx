@@ -142,7 +142,7 @@ const OrdersTable = () => {
                     # {item.codebill}
                   </h5>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark capitalize">
                   <p className="text-black dark:text-white">{item.fullname}</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -227,7 +227,7 @@ const OrdersTable = () => {
               pageSize={itemPerPage}
               current={pageCurrent}
               onChange={(page) => setPageCurrent(page)}
-                showSizeChanger={false}
+              showSizeChanger={false}
             />
           </div>
         ) : (

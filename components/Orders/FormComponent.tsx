@@ -138,7 +138,7 @@ const FormComponent = ({
         <Form.Item<FieldType>
           label="Trạng thái thanh toán"
           name="status"
-          initialValue={StatusPay[selected?.status]}
+          initialValue={selected?.status}
           rules={[
             {
               required: true,

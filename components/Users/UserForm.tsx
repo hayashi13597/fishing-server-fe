@@ -13,7 +13,7 @@ type FieldType = {
   role?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  visible?: boolean;
+  visiable?: boolean;
 };
 
 type FormComponentType = {
@@ -135,7 +135,7 @@ const UserForm = ({
 
         <Form.Item<FieldType>
           label="Trạng thái"
-          name="visible"
+          name="visiable"
           initialValue={
             selected ? (selected?.visiable === true ? true : false) : true
           }

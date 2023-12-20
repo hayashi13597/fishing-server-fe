@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Button, Modal } from "antd";
 import Image from "next/image";
 import { formatDateTime, formatMoney } from "@/utils";
@@ -32,8 +33,11 @@ const ModalComponent = ({ closeModal, isModalOpen, selected }: ModalType) => {
       ListImage = [];
     }
   }
-
   const [CurrentImage, setCurrentImage] = useState(imageUrl);
+  useEffect(() => {
+    setCurrentImage(() => imageUrl);
+  }, [imageUrl]);
+
   return (
     <>
       <Modal
